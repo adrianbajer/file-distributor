@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>File Distributor</title>
+</head>
+<body bgcolor="#6495ed">
+<hr>
+<div class="container">
+    <h1>File Distributor Form</h1>
+    <div>
+        <form action="#" th:action="@{/give_files}" th:object="${rakscode}" method="post">
+            <input type="text" th:field="*{raksCode}" placeholder="Podaj kod RAKS">
+            <select th:field="*{userName}">
+                <option value = "ADRIAN">Adrian</option>
+                <option value = "BOLEK">Bolek</option>
+                <option value = "LOLEK">Lolek</option>
+            </select><br><br>
+            <input type="radio" name="job" th:field="*{jobType}" value="WYDANIE"> wydanie<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="DUZA_KOREKTA"> duża korekta<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="MINIKOREKTA"> minikorekta<br><br>
+            <input type="submit" th:value="Wykonaj">
+        </form>
+        <hr>
+    </div>
+</div>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ public class RaksCode {
 
     private String raksCode;
     private UserName userName;
-    private JobType jobType;
+    private JobType jobType = JobType.WYDANIE;
 
     public RaksCode() {
     }
