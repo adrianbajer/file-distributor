@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:form="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>File list</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body bgcolor="#6495ed">
 
+<div class="container">
+
+    <div class="row">
+        <div id="title">
+            <h1>Your RAKScode consists of following files:</h1>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Place</th>
+                <th>Region</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-th-each="plikzrodlowy : ${plikiZrodlowe}">
+                <td th:text="${plikzrodlowy.name}"></td>
+                <td th:text="${plikzrodlowy.place}"></td>
+                <td th:text="${plikzrodlowy.region}"></td>
+                <td th:text="${plikzrodlowy.type}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>

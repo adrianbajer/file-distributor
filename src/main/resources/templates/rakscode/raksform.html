@@ -9,7 +9,7 @@
 <div class="container">
     <h1>File Distributor Form</h1>
     <div>
-        <form action="#" th:action="@{/give_files}" th:object="${rakscode}" method="post">
+        <form action="#" th:action="@{/viewfiles}" th:object="${rakscode}" method="post">
             <input type="text" th:field="*{raksCode}" placeholder="Podaj kod RAKS">
             <select th:field="*{userName}">
                 <option value = "ADRIAN">Adrian</option>

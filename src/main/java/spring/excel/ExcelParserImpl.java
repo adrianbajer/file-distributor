@@ -54,7 +54,7 @@ public class ExcelParserImpl implements ExcelParser{
                 }
             }
 
-//         @@@@@@@@@@@@@ this loop creates of PlikZrodlowy class and sets their attributes from "zasiegi_korekty" sheet,
+//         @@@@@@@@@@@@@ this loop creates instances of PlikZrodlowy class and sets their attributes from "zasiegi_korekty" sheet,
 //            basing on "zasiegiKorektyList" values, which are primary key in that sheet.
 //            Set is used to get unique instances of PlikZrodlowy. @@@@@@@@@@@@@
             for(Row row : zasiegiKorekty) {
