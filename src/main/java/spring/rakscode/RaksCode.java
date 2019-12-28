@@ -12,7 +12,7 @@ public class RaksCode {
 
     private String raksCode;
     private UserName userName;
-    private JobType jobType = JobType.WYDANIE;
+    private JobType jobType = JobType.PUBLICATION;
 
     public RaksCode() {
     }

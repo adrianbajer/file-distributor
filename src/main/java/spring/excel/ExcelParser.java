@@ -1,6 +1,6 @@
 package spring.excel;
 
-import spring.plikizrodlowe.PlikZrodlowy;
+import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
 import java.util.Set;
@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface ExcelParser {
 
-    Set<PlikZrodlowy> getSetOfPlikiZrodlowe(RaksCode raksCode);
+    Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode);
 
 }

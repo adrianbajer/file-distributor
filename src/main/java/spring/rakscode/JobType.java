@@ -1,7 +1,7 @@
 package spring.rakscode;
 
 public enum JobType {
-    WYDANIE,
-    DUZA_KOREKTA,
-    MINIKOREKTA;
+    PUBLICATION,
+    LARGE_ACTUALISATION,
+    MINI_ACTUALISATION;
 }

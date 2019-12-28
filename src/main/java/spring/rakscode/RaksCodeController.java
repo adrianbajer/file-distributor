@@ -25,13 +25,13 @@ public class RaksCodeController {
 
     @RequestMapping(value = "/givefiles")
     public ModelAndView giveFiles(@ModelAttribute(value = "rakscode") RaksCode raksCode) {
-        excelParser.getSetOfPlikiZrodlowe(raksCode);
+        excelParser.getSetOfCdrFiles(raksCode);
         return null;
     }
 
     @RequestMapping(value = "/viewfiles")
     public ModelAndView viewFiles(RaksCode raksCode) {
-        return new ModelAndView("rakscode/viewfiles", "plikiZrodlowe", excelParser.getSetOfPlikiZrodlowe(raksCode));
+        return new ModelAndView("rakscode/viewfiles", "cdrFiles", excelParser.getSetOfCdrFiles(raksCode));
     }
 
 }

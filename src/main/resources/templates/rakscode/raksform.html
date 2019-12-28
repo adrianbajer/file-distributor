@@ -10,16 +10,16 @@
     <h1>File Distributor Form</h1>
     <div>
         <form action="#" th:action="@{/viewfiles}" th:object="${rakscode}" method="post">
-            <input type="text" th:field="*{raksCode}" placeholder="Podaj kod RAKS">
+            <input type="text" th:field="*{raksCode}" placeholder="Insert RAKS code">
             <select th:field="*{userName}">
                 <option value = "ADRIAN">Adrian</option>
                 <option value = "BOLEK">Bolek</option>
                 <option value = "LOLEK">Lolek</option>
             </select><br><br>
-            <input type="radio" name="job" th:field="*{jobType}" value="WYDANIE"> wydanie<br>
-            <input type="radio" name="job" th:field="*{jobType}" value="DUZA_KOREKTA"> duża korekta<br>
-            <input type="radio" name="job" th:field="*{jobType}" value="MINIKOREKTA"> minikorekta<br><br>
-            <input type="submit" th:value="Wykonaj">
+            <input type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="LARGE_ACTUALISATION"> large actualisation<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="MINI_ACTUALISATION"> mini actualisation<br><br>
+            <input type="submit" th:value="Submit">
         </form>
         <hr>
     </div>

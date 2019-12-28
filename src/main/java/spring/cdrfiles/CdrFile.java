@@ -1,17 +1,17 @@
-package spring.plikizrodlowe;
+package spring.cdrfiles;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PlikZrodlowy {
+public class CdrFile {
     private String name;
     private String place;
     private String region;
     private String type;
 
-    public PlikZrodlowy() {
+    public CdrFile() {
     }
 
 }

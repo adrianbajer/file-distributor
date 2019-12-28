@@ -24,11 +24,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr data-th-each="plikzrodlowy : ${plikiZrodlowe}">
-                <td th:text="${plikzrodlowy.name}"></td>
-                <td th:text="${plikzrodlowy.place}"></td>
-                <td th:text="${plikzrodlowy.region}"></td>
-                <td th:text="${plikzrodlowy.type}"></td>
+            <tr data-th-each="cdrFile : ${cdrFiles}">
+                <td th:text="${cdrFile.name}"></td>
+                <td th:text="${cdrFile.place}"></td>
+                <td th:text="${cdrFile.region}"></td>
+                <td th:text="${cdrFile.type}"></td>
             </tr>
             </tbody>
         </table>

@@ -4,7 +4,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import spring.plikizrodlowe.PlikZrodlowy;
+import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
 import java.io.*;
@@ -14,18 +14,17 @@ public class ExcelParserImpl implements ExcelParser{
 
 
     @Override
-    public Set<PlikZrodlowy> getSetOfPlikiZrodlowe(RaksCode raksCode) {
+    public Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode) {
         Workbook workbook = null;
         FileInputStream file = null;
         String raksCodeName = raksCode.getRaksCode();
 
-        List <String> zasiegiKorektyList = new ArrayList<>();
-        Set <PlikZrodlowy> plikiZrodloweSet = new HashSet<>();
+        List <String> actualisationAreasList = new ArrayList<>();
+        Set <CdrFile> cdrFilesSet = new HashSet<>();
 
 
         try {
-            file = new FileInputStream(new File("C:\\Users\\Adrian\\Documents\\Nauka programowania\\" +
-                    "FileDistributor_materiały\\pliki xls\\Baza archiwum FD.xls"));
+            file = new FileInputStream(new File("src/main/resources/excelfiles/excel example file.xls"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -37,32 +36,32 @@ public class ExcelParserImpl implements ExcelParser{
 //            workbook = new XSSFWorkbook(file);
             workbook = new HSSFWorkbook(file);
 
-            Sheet wydania = workbook.getSheetAt(0);
-            Sheet plikiZrodlowe = workbook.getSheetAt(1);
-            Sheet zasiegiKorekty = workbook.getSheetAt(2);
+            Sheet publications = workbook.getSheetAt(0);
+            Sheet cdrFiles = workbook.getSheetAt(1);
+            Sheet actualisationAreas = workbook.getSheetAt(2);
 
 
-//            @@@@@@@@@@@@@ this loop gets names of "zasiegi korekty" from "wydania" sheet,
+//            @@@@@@@@@@@@@ This loop gets names of "actualisation areas" from "publications" sheet,
 //            which has RaksCode equal to RaksCode given by user @@@@@@@@@@@@@
 
-            for(Row row : wydania) {
+            for(Row row : publications) {
                 // first condition skips 3 first rows, which contains headings
                 if (row.getRowNum() > 2) {
                     if (row.getCell(0).toString().equals(raksCodeName)) {
-                        zasiegiKorektyList.add(row.getCell(11).toString());
+                        actualisationAreasList.add(row.getCell(11).toString());
                     }
                 }
             }
 
-//         @@@@@@@@@@@@@ this loop creates instances of PlikZrodlowy class and sets their attributes from "zasiegi_korekty" sheet,
-//            basing on "zasiegiKorektyList" values, which are primary key in that sheet.
-//            Set is used to get unique instances of PlikZrodlowy. @@@@@@@@@@@@@
-            for(Row row : zasiegiKorekty) {
+//         @@@@@@@@@@@@@ This loop creates instances of CdrFile class and sets their attributes.
+//         Attributes are taken from "actualisationAreas" sheet, basing on "actualisationAreasList" values,
+//         which are primary key in that sheet. Set is used to get unique instances of CdrFile. @@@@@@@@@@@@@
+            for(Row row : actualisationAreas) {
                 if (row.getRowNum() > 1) {
                     String cellValue = row.getCell(0).getStringCellValue();
-                    for(String zasiegKorekty : zasiegiKorektyList) {
-                        if(cellValue.equals(zasiegKorekty)) {
-                            plikiZrodloweSet.add(new PlikZrodlowy(row.getCell(1).toString(),"",
+                    for(String actualisationArea : actualisationAreasList) {
+                        if(cellValue.equals(actualisationArea)) {
+                            cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
                                     row.getCell(15).toString(),row.getCell(16).toString()));
                             break;
                         }
@@ -70,14 +69,14 @@ public class ExcelParserImpl implements ExcelParser{
                 }
             }
 
-//            @@@@@@@@@@@@ this loop sets place name attribute in PlikZrodlowy objects @@@@@@@@@@@@@
+//            @@@@@@@@@@@@ This loop sets place attribute in CdrFile objects @@@@@@@@@@@@@
 
-            for(Row row : plikiZrodlowe) {
+            for(Row row : cdrFiles) {
                 if (row.getRowNum() > 1) {
                     String cellValue = row.getCell(0).getStringCellValue();
-                    for(PlikZrodlowy plikZrodlowy : plikiZrodloweSet) {
-                        if(cellValue.equals(plikZrodlowy.getName())) {
-                            plikZrodlowy.setPlace(row.getCell(3).toString());
+                    for(CdrFile cdrFile : cdrFilesSet) {
+                        if(cellValue.equals(cdrFile.getName())) {
+                            cdrFile.setPlace(row.getCell(3).toString());
                             break;
                         }
                     }
@@ -91,6 +90,6 @@ public class ExcelParserImpl implements ExcelParser{
             e.printStackTrace();
         }
 
-        return plikiZrodloweSet;
+        return cdrFilesSet;
     }
 }
