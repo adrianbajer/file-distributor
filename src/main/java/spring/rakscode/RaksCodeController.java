@@ -7,15 +7,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import spring.cdrfiles.CdrFile;
+import spring.cdrfiles.FileDownloaderImpl;
 import spring.excel.ExcelParserImpl;
 
 @Controller
 public class RaksCodeController {
 
     private ExcelParserImpl excelParser;
+    private FileDownloaderImpl fileDownloader;
 
     public RaksCodeController() {
         excelParser = new ExcelParserImpl();
+        fileDownloader = new FileDownloaderImpl();
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
@@ -24,9 +28,9 @@ public class RaksCodeController {
     }
 
     @RequestMapping(value = "/givefiles")
-    public ModelAndView giveFiles(@ModelAttribute(value = "rakscode") RaksCode raksCode) {
-        excelParser.getSetOfCdrFiles(raksCode);
-        return null;
+    public ModelAndView giveFiles(CdrFile cdrFile) {
+        fileDownloader.copyFile(cdrFile);
+        return new ModelAndView("rakscode/viewfiles");
     }
 
     @RequestMapping(value = "/viewfiles")

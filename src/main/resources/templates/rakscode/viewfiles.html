@@ -29,6 +29,12 @@
                 <td th:text="${cdrFile.place}"></td>
                 <td th:text="${cdrFile.region}"></td>
                 <td th:text="${cdrFile.type}"></td>
+                <td>
+                    <form method="post" th:action="@{/givefiles}" th:object="${cdrFile}">
+<!--                        <input type="hidden" th:name="emp_id" th:value="${emp.id}">-->
+                        <input type="submit" th:value= "Download">
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>
