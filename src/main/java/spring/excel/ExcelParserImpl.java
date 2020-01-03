@@ -24,7 +24,7 @@ public class ExcelParserImpl implements ExcelParser{
 
 
         try {
-            file = new FileInputStream(new File("src/main/resources/excelfiles/excel example file.xls"));
+            file = new FileInputStream(new File("src\\main\\resources\\excelfiles\\excel example file.xls"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

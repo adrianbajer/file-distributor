@@ -3,13 +3,14 @@ package spring.rakscode;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
 import spring.excel.ExcelParserImpl;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class RaksCodeController {
@@ -27,15 +28,31 @@ public class RaksCodeController {
         return new ModelAndView("rakscode/raksform","rakscode", new RaksCode());
     }
 
-    @RequestMapping(value = "/givefiles")
-    public ModelAndView giveFiles(CdrFile cdrFile) {
-        fileDownloader.copyFile(cdrFile);
-        return new ModelAndView("rakscode/viewfiles");
-    }
 
-    @RequestMapping(value = "/viewfiles")
+    @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
         return new ModelAndView("rakscode/viewfiles", "cdrFiles", excelParser.getSetOfCdrFiles(raksCode));
     }
 
+
+    @RequestMapping(value = "/givefiles", params="action=download")
+    public ModelAndView downloadFiles(RaksCode raksCode) {
+        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+        for(CdrFile cdrFile : cdrFileSet) {
+            fileDownloader.copyFile(cdrFile);
+        }
+        return new ModelAndView("redirect:/raksform");
+    }
+
+
+    @RequestMapping(value = "/givefile")
+    public ModelAndView downloadChosenFile(String cdrFile_name, String cdrFile_place, String cdrFile_region, String cdrFile_type) {
+        CdrFile cdrFile = new CdrFile(cdrFile_name, cdrFile_place, cdrFile_region, cdrFile_type);
+        fileDownloader.copyFile(cdrFile);
+
+        Set<CdrFile> cdrFiles = new HashSet<>();
+        cdrFiles.add(cdrFile);
+
+        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFiles);
+    }
 }

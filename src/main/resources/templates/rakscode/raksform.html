@@ -7,9 +7,9 @@
 <body bgcolor="#6495ed">
 <hr>
 <div class="container">
-    <h1>File Distributor Form</h1>
+    <h3>File Distributor Form</h3>
     <div>
-        <form action="#" th:action="@{/viewfiles}" th:object="${rakscode}" method="post">
+        <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">
             <input type="text" th:field="*{raksCode}" placeholder="Insert RAKS code">
             <select th:field="*{userName}">
                 <option value = "ADRIAN">Adrian</option>
@@ -19,7 +19,9 @@
             <input type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>
             <input type="radio" name="job" th:field="*{jobType}" value="LARGE_ACTUALISATION"> large actualisation<br>
             <input type="radio" name="job" th:field="*{jobType}" value="MINI_ACTUALISATION"> mini actualisation<br><br>
-            <input type="submit" th:value="Submit">
+            <button style="background-color: yellow" type="submit" name="action" value="download">Download all</button>
+            <button style="background-color: lightyellow" type="submit" name="action" value="view">View all</button>
+            </form>
         </form>
         <hr>
     </div>
