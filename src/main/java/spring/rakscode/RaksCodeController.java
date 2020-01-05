@@ -23,26 +23,31 @@ public class RaksCodeController {
         fileDownloader = new FileDownloaderImpl();
     }
 
+    @RequestMapping("/")
+    public String indexGet() {
+        return "rakscode/index";
+    }
+
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
     public ModelAndView showform(Model model) {
         return new ModelAndView("rakscode/raksform","rakscode", new RaksCode());
     }
 
 
-    @RequestMapping(value = "/givefiles", params="action=view")
+    @RequestMapping(value = "/viewfiles")
     public ModelAndView viewFiles(RaksCode raksCode) {
         return new ModelAndView("rakscode/viewfiles", "cdrFiles", excelParser.getSetOfCdrFiles(raksCode));
     }
 
 
-    @RequestMapping(value = "/givefiles", params="action=download")
-    public ModelAndView downloadFiles(RaksCode raksCode) {
-        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
-        for(CdrFile cdrFile : cdrFileSet) {
-            fileDownloader.copyFile(cdrFile);
-        }
-        return new ModelAndView("redirect:/raksform");
-    }
+//    @RequestMapping(value = "/viewfiles", params="action=download")
+//    public ModelAndView downloadFiles(RaksCode raksCode) {
+//        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+//        for(CdrFile cdrFile : cdrFileSet) {
+//            fileDownloader.copyFile(cdrFile);
+//        }
+//        return new ModelAndView("redirect:/raksform");
+//    }
 
 
     @RequestMapping(value = "/givefile")
