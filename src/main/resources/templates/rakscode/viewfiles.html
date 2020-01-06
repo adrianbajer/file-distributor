@@ -12,30 +12,29 @@
 
     <div class="row">
         <div id="title">
-            <h3>Your RAKScode consists of following files:</h3>
+            <h3>Your project consists of following files:</h3>
         </div>
         <table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Place</th>
-                <th>Region</th>
-                <th>Type</th>
+                <th style="text-align: left;">Name</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Place</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Region</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Type</th>
             </tr>
             </thead>
             <tbody>
             <tr data-th-each="cdrFile : ${cdrFiles}">
                 <td th:text="${cdrFile.name}"></td>
-                <td th:text="${cdrFile.place}"></td>
-                <td th:text="${cdrFile.region}"></td>
-                <td th:text="${cdrFile.type}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.place}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.region}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.type}"></td>
                 <td>
                     <form method="post" th:action="@{/givefile}">
                         <input type="hidden" th:name="cdrFile_name" th:value="${cdrFile.name}">
                         <input type="hidden" th:name="cdrFile_place" th:value="${cdrFile.place}">
                         <input type="hidden" th:name="cdrFile_region" th:value="${cdrFile.region}">
                         <input type="hidden" th:name="cdrFile_type" th:value="${cdrFile.type}">
-                        <input style="background-color: yellow" type="submit" th:value= "Download">
                     </form>
                 </td>
             </tr>

@@ -23,6 +23,11 @@ public class RaksCodeController {
         fileDownloader = new FileDownloaderImpl();
     }
 
+    @RequestMapping("/")
+    public String indexGet() {
+        return "rakscode/index";
+    }
+
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
     public ModelAndView showform(Model model) {
         return new ModelAndView("rakscode/raksform","rakscode", new RaksCode());
