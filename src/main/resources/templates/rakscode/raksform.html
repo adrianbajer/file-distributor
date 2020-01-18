@@ -2,16 +2,34 @@
 <html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>File Distributor</title>
+    <title>File Distributor - RAKS form</title>
 </head>
 <body bgcolor="#6495ed">
 <hr>
 <div class="container">
-    <h3>Enter RAKS code of the project, you are going to work on.</h3>
+    <h2>RAKS code form</h2>
     <div>
-        <form action="#" th:action="@{/viewfiles}" th:object="${rakscode}" method="post">
+        <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">
+            <p style="font-weight: bold;">Enter RAKS code of your project.<br>
+            For testing purposes enter: Akwitania._map_LAM9_FR or Albania..._map_LAM9_EN</p>
             <input type="text" th:field="*{raksCode}" placeholder="RAKS code"><br><br>
-            <button style="background-color: yellow" type="submit">Submit</button>
+
+            <p style="font-weight: bold;">Select your name: &ensp;
+            <br><br>
+            <select style="margin-top:-10px;" th:field="*{userName}">
+                <option value = "ADRIAN">Adrian</option>
+                <option value = "BOLEK">Bolek</option>
+                <option value = "LOLEK">Lolek</option>
+            </select>
+            </p><br><br>
+
+            <p style="margin-top:-25px; font-weight: bold;">Select type of job.</p>
+            <input style="margin-top:-10px;" type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="ACTUALISATION"> actualisation<br><br>
+            <p style="font-weight: bold;">Now you can either download or view files for your project</p>
+
+            <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="download">Download</button>
+            <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action" value="view">View</button>
         </form>
         <hr>
     </div>
@@ -19,17 +37,3 @@
 
 </body>
 </html>
-
-<!--<form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">
-            <input type="text" th:field="*{raksCode}" placeholder="Insert RAKS code">
-            <select th:field="*{userName}">
-                <option value = "ADRIAN">Adrian</option>
-                <option value = "BOLEK">Bolek</option>
-                <option value = "LOLEK">Lolek</option>
-            </select><br><br>
-            <input type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>
-            <input type="radio" name="job" th:field="*{jobType}" value="LARGE_ACTUALISATION"> large actualisation<br>
-            <input type="radio" name="job" th:field="*{jobType}" value="MINI_ACTUALISATION"> mini actualisation<br><br>
-            <button style="background-color: yellow" type="submit" name="action" value="download">Download all</button>
-            <button style="background-color: lightyellow" type="submit" name="action" value="view">View all</button>
-        </form>-->
