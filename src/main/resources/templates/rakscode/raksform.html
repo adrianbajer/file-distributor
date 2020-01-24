@@ -10,10 +10,12 @@
     <h2>RAKS code form</h2>
     <div>
         <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">
-            <p style="font-weight: bold;">Enter RAKS code of your project.<br>
-            For testing purposes enter: Aquitaine._map_LAM9_FR or Albania..._map_LAM9_EN</p>
-            <input type="text" th:field="*{raksCode}" placeholder="RAKS code"><br><br>
-
+            <p style="font-weight: bold;">Select RAKS code of your project:</p>
+            <select style="margin-top:-10px;" th:field="*{raksCode}">
+                <option value = "Aquitaine._map_LAM9_FR">Aquitaine._map_LAM9_FR</option>
+                <option value = "Albania..._map_LAM9_EN">Albania..._map_LAM9_EN</option>
+                <option value = "Germany..._map_LAM9_EN">Germany..._map_LAM9_EN</option>
+            </select>
             <p style="font-weight: bold;">Select your name: &ensp;
             <br><br>
             <select style="margin-top:-10px;" th:field="*{userName}">

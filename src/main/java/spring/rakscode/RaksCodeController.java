@@ -64,20 +64,8 @@ public class RaksCodeController {
             return new ModelAndView("redirect:/message/failed");
             }
         }
-
-//        @@@@@@ JobType.PUBLICATION means that files won't be modified.
-//        That's why application downloads files and doesn't make any changes in excel database. @@@@@@
-        if (raksCode.getJobType()==JobType.PUBLICATION){
-            for(CdrFile cdrFile : cdrFileSet) {
-                fileDownloader.copyFile(cdrFile);
-            }
-            return new ModelAndView("redirect:/message/ok");
-        } else {
-            for(CdrFile cdrFile : cdrFileSet) {
-                fileDownloader.copyFile(cdrFile);
-            }
-        }
         excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
+        fileDownloader.copyFile(cdrFileSet);
         return new ModelAndView("redirect:/message/saved");
     }
 

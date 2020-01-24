@@ -18,7 +18,7 @@ public class ExcelWriterImpl implements ExcelWriter {
 
         Workbook workbook = null;
         FileInputStream file = null;
-        String filePath = "src\\main\\resources\\excelfiles\\excel example file.xls";
+        String filePath = "src\\main\\resources\\excelfiles\\downloaded_files_data.xls";
 
         try {
             file = new FileInputStream(new File(filePath));
@@ -29,18 +29,17 @@ public class ExcelWriterImpl implements ExcelWriter {
         try {
             workbook = new HSSFWorkbook(file);
 
-            Sheet cdrFiles = workbook.getSheetAt(1);
+            Sheet cdrFilesSheet = workbook.getSheetAt(0);
 
-            for(Row row : cdrFiles) {
-                if (row.getRowNum() > 1) {
-                    String cellValue = row.getCell(0).getStringCellValue();
-                    for(CdrFile cdrFile : cdrFilesSet) {
-                        if(cellValue.equals(cdrFile.getName())) {
-                            row.getCell(3).setCellValue(raksCode.getUserName().getName());
-                            break;
-                        }
-                    }
-                }
+            int i = 1;
+            for(CdrFile cdrFile : cdrFilesSet) {
+                Row row = cdrFilesSheet.createRow(i);
+                row.createCell(0).setCellValue(cdrFile.getName());
+                row.createCell(1).setCellValue(raksCode.getUserName().getName());
+                row.createCell(2).setCellValue(cdrFile.getRegion());
+                row.createCell(3).setCellValue(cdrFile.getType());
+                row.createCell(4).setCellValue(raksCode.getJobType().toString());
+                i++;
             }
 
             file.close();

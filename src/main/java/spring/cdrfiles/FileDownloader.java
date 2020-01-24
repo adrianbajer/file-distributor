@@ -1,7 +1,9 @@
 package spring.cdrfiles;
 
+import java.util.Set;
+
 public interface FileDownloader {
 
-    void copyFile(CdrFile cdrFile);
+    void copyFile(Set<CdrFile> cdrFileSet);
 
 }
