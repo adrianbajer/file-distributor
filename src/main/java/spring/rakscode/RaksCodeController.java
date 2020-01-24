@@ -7,20 +7,22 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
-import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
+import spring.repository.DataStorageImpl;
 
 import java.util.Set;
 
 @Controller
 public class RaksCodeController {
 
-    private ExcelParserImpl excelParser;
+//    private ExcelParserImpl excelParser;
+    private DataStorageImpl dataStorage;
     private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriter;
 
     public RaksCodeController() {
-        excelParser = new ExcelParserImpl();
+//        excelParser = new ExcelParserImpl();
+        dataStorage = new DataStorageImpl();
         fileDownloader = new FileDownloaderImpl();
         excelWriter = new ExcelWriterImpl();
     }
@@ -39,7 +41,7 @@ public class RaksCodeController {
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
 
-        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
         }
@@ -50,7 +52,7 @@ public class RaksCodeController {
     @RequestMapping(value = "/givefiles", params="action=download")
     public ModelAndView downloadFiles(RaksCode raksCode) {
 
-        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
         }
