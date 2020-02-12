@@ -14,6 +14,7 @@ public class FileDownloaderImpl implements FileDownloader {
 
     @Override
     public void copyFile(Set<CdrFile> cdrFileSet) {
+
         PathCreator pathCreator = new PathCreatorImpl();
 
         for(CdrFile cdrFile : cdrFileSet) {
