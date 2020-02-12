@@ -1,9 +1,8 @@
 package spring.excel;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
@@ -14,22 +13,19 @@ public class ExcelWriterImpl implements ExcelWriter {
 
 
     @Override
-    public void saveChangesToExcelFile(Set<CdrFile> cdrFilesSet, RaksCode raksCode) {
-
-        Workbook workbook = null;
-        FileInputStream file = null;
-        String filePath = "src\\main\\resources\\excelfiles\\downloaded_files_data.xls";
+    public File createAndFillExcelFile(Set<CdrFile> cdrFilesSet, RaksCode raksCode) {
 
         try {
-            file = new FileInputStream(new File(filePath));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+            String filename = "NewExcelFile.xls" ;
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet cdrFilesSheet = workbook.createSheet("cdrFiles");
+            Row headRow = cdrFilesSheet.createRow(0);
 
-        try {
-            workbook = new HSSFWorkbook(file);
-
-            Sheet cdrFilesSheet = workbook.getSheetAt(0);
+            headRow.createCell(0).setCellValue("File name");
+            headRow.createCell(1).setCellValue("Employee name");
+            headRow.createCell(2).setCellValue("Region");
+            headRow.createCell(3).setCellValue("File type");
+            headRow.createCell(4).setCellValue("Job type");
 
             int i = 1;
             for(CdrFile cdrFile : cdrFilesSet) {
@@ -42,15 +38,18 @@ public class ExcelWriterImpl implements ExcelWriter {
                 i++;
             }
 
-            file.close();
+            FileOutputStream fileOut = new FileOutputStream(filename);
+            workbook.write(fileOut);
+            fileOut.close();
+            workbook.close();
+            File file = new File(filename);
 
-            FileOutputStream outFile = new FileOutputStream(filePath);
-            workbook.write(outFile);
-            outFile.close();
+            return file;
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch ( IOException ex ) {
+            System.out.println(ex);
         }
 
+        return null;
     }
 }

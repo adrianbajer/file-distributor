@@ -18,16 +18,14 @@ import java.util.Set;
 @Controller
 public class RaksCodeController {
 
-//    private ExcelParserImpl excelParser;
-    private DataStorageImpl dataStorage;
+    private DataStorageImpl dataStorageImpl;
     private FileDownloaderImpl fileDownloader;
-    private ExcelWriterImpl excelWriter;
+    private ExcelWriterImpl excelWriterImpl;
 
     public RaksCodeController() {
-//        excelParser = new ExcelParserImpl();
-        dataStorage = new DataStorageImpl();
+        dataStorageImpl = new DataStorageImpl();
         fileDownloader = new FileDownloaderImpl();
-        excelWriter = new ExcelWriterImpl();
+        excelWriterImpl = new ExcelWriterImpl();
     }
 
     @RequestMapping("/")
@@ -44,7 +42,7 @@ public class RaksCodeController {
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
 
-        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
+        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
         }
@@ -56,61 +54,17 @@ public class RaksCodeController {
 
     private static final String APPLICATION_XLS = "application/vnd.ms-excel";
 
-    private File createFile() throws IOException {
-        File file = new File("excelFileCreated.xls");
-        file.createNewFile();
-        return file;
-    }
-
     @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
-    public @ResponseBody void downloadA(HttpServletResponse response) throws IOException {
-        File file = createFile();
-        InputStream in = new FileInputStream(new File("excelFileCreated.xls"));
+    public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
+        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
+        File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
+        InputStream in = new FileInputStream(file);
 
         response.setContentType(APPLICATION_XLS);
         response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
         response.setHeader("Content-Length", String.valueOf(file.length()));
         FileCopyUtils.copy(in, response.getOutputStream());
     }
-//    public ModelAndView downloadFiles(RaksCode raksCode) {
-//
-//        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
-//        if (cdrFileSet.size() == 0) {
-//            return new ModelAndView("redirect:/message/noproject");
-//        }
-//
-////        @@@@@@ Files which are in other place than archive, can't be downloaded.
-////        That's why application denies downloading them. @@@@@@
-//        for(CdrFile cdrFile : cdrFileSet) {
-//            if (!cdrFile.getPlace().equals("archive")) {
-//                return new ModelAndView("redirect:/message/failed");
-//            }
-//        }
-//        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
-//        fileDownloader.copyFile(cdrFileSet);
-//        return new ModelAndView("redirect:/message/saved");
-//    }
-
-
-//    @RequestMapping(value = "/givefiles", params="action=download")
-//    public ModelAndView downloadFiles(RaksCode raksCode) {
-//
-//        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
-//        if (cdrFileSet.size() == 0) {
-//            return new ModelAndView("redirect:/message/noproject");
-//        }
-//
-////        @@@@@@ Files which are in other place than archive, can't be downloaded.
-////        That's why application denies downloading them. @@@@@@
-//        for(CdrFile cdrFile : cdrFileSet) {
-//            if (!cdrFile.getPlace().equals("archive")) {
-//            return new ModelAndView("redirect:/message/failed");
-//            }
-//        }
-//        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
-//        fileDownloader.copyFile(cdrFileSet);
-//        return new ModelAndView("redirect:/message/saved");
-//    }
 
 
 
@@ -133,30 +87,4 @@ public class RaksCodeController {
     public String messageNoProject() {
         return "rakscode/messagenoproject";
     }
-
-//    Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
-//        for(CdrFile cdrFile : cdrFileSet) {
-//            if (raksCode.getJobType()==JobType.PUBLICATION){
-//                fileDownloader.copyFile(cdrFile);
-//                return new ModelAndView("redirect:/raksform");
-//            }
-//            else {
-//                if (!cdrFile.getPlace().equals("archive")){
-//                    return new ModelAndView("redirect:/message");
-//                }
-//            }
-//        }
-//        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
-//        return new ModelAndView("redirect:/raksform");
-
-//    @RequestMapping(value = "/givefile")
-//    public ModelAndView downloadChosenFile(String cdrFile_name, String cdrFile_place, String cdrFile_region, String cdrFile_type) {
-//        CdrFile cdrFile = new CdrFile(cdrFile_name, cdrFile_place, cdrFile_region, cdrFile_type);
-//        fileDownloader.copyFile(cdrFile);
-//
-//        Set<CdrFile> cdrFiles = new HashSet<>();
-//        cdrFiles.add(cdrFile);
-//
-//        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFiles);
-//    }
 }

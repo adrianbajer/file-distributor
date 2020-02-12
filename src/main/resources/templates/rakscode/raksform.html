@@ -9,26 +9,26 @@
 <div class="container">
     <h2>RAKS code form</h2>
     <div>
-        <form action="#" th:action="@{/givefiles}" method="get">
-<!--            <p style="font-weight: bold;">Select RAKS code of your project:</p>-->
-<!--            <select style="margin-top:-10px;" th:field="*{raksCode}">-->
-<!--                <option value = "Aquitaine._map_LAM9_FR">Aquitaine._map_LAM9_FR</option>-->
-<!--                <option value = "Albania..._map_LAM9_EN">Albania..._map_LAM9_EN</option>-->
-<!--                <option value = "Germany..._map_LAM9_EN">Germany..._map_LAM9_EN</option>-->
-<!--            </select>-->
-<!--            <p style="font-weight: bold;">Select your name: &ensp;-->
-<!--            <br><br>-->
-<!--            <select style="margin-top:-10px;" th:field="*{userName}">-->
-<!--                <option value = "ADRIAN">Adrian</option>-->
-<!--                <option value = "BOLEK">Bolek</option>-->
-<!--                <option value = "LOLEK">Lolek</option>-->
-<!--            </select>-->
-<!--            </p><br><br>-->
+        <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="get">
+            <p style="font-weight: bold;">Select RAKS code of your project:</p>
+            <select style="margin-top:-10px;" th:field="*{raksCode}">
+                <option value = "Aquitaine._map_LAM9_FR">Aquitaine._map_LAM9_FR</option>
+                <option value = "Albania..._map_LAM9_EN">Albania..._map_LAM9_EN</option>
+                <option value = "Germany..._map_LAM9_EN">Germany..._map_LAM9_EN</option>
+            </select>
+            <p style="font-weight: bold;">Select your name: &ensp;
+            <br><br>
+            <select style="margin-top:-10px;" th:field="*{userName}">
+                <option value = "ADRIAN">Adrian</option>
+                <option value = "BOLEK">Bolek</option>
+                <option value = "LOLEK">Lolek</option>
+            </select>
+            </p><br><br>
 
-<!--            <p style="margin-top:-25px; font-weight: bold;">Select type of job.</p>-->
-<!--            <input style="margin-top:-10px;" type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>-->
-<!--            <input type="radio" name="job" th:field="*{jobType}" value="UPDATING"> updating<br><br>-->
-<!--            <p style="font-weight: bold;">Now you can either download or view files for your project</p>-->
+            <p style="margin-top:-25px; font-weight: bold;">Select type of job.</p>
+            <input style="margin-top:-10px;" type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>
+            <input type="radio" name="job" th:field="*{jobType}" value="UPDATING"> updating<br><br>
+            <p style="font-weight: bold;">Now you can either download or view files for your project</p>
 
             <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="download">Download</button>
             <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action" value="view">View</button>
@@ -39,3 +39,27 @@
 
 </body>
 </html>
+
+
+<!--<form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">-->
+<!--    <p style="font-weight: bold;">Enter RAKS code of your project.<br>-->
+<!--        For testing purposes enter: Akwitania._map_LAM9_FR or Albania..._map_LAM9_EN</p>-->
+<!--    <input type="text" th:field="*{raksCode}" placeholder="RAKS code"><br><br>-->
+
+<!--    <p style="font-weight: bold;">Select your name: &ensp;-->
+<!--        <br><br>-->
+<!--        <select style="margin-top:-10px;" th:field="*{userName}">-->
+<!--            <option value = "ADRIAN">Adrian</option>-->
+<!--            <option value = "BOLEK">Bolek</option>-->
+<!--            <option value = "LOLEK">Lolek</option>-->
+<!--        </select>-->
+<!--    </p><br><br>-->
+
+<!--    <p style="margin-top:-25px; font-weight: bold;">Select type of job.</p>-->
+<!--    <input style="margin-top:-10px;" type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>-->
+<!--    <input type="radio" name="job" th:field="*{jobType}" value="ACTUALISATION"> actualisation<br><br>-->
+<!--    <p style="font-weight: bold;">Now you can either download or view files for your project</p>-->
+
+<!--    <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="download">Download</button>-->
+<!--    <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action" value="view">View</button>-->
+<!--</form>-->
