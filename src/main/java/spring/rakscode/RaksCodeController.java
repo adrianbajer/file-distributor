@@ -41,18 +41,19 @@ public class RaksCodeController {
     }
 
 
-//    @RequestMapping(value = "/givefiles", params="action=view")
-//    public ModelAndView viewFiles(RaksCode raksCode) {
-//
-//        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
-//        if (cdrFileSet.size() == 0) {
-//            return new ModelAndView("redirect:/message/noproject");
-//        }
-//        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
-//    }
+    @RequestMapping(value = "/givefiles", params="action=view")
+    public ModelAndView viewFiles(RaksCode raksCode) {
+
+        Set<CdrFile> cdrFileSet = dataStorage.getSetOfCdrFiles(raksCode);
+        if (cdrFileSet.size() == 0) {
+            return new ModelAndView("redirect:/message/noproject");
+        }
+        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
+    }
 
 
-//    private static final String FILE_PATH = "src\\main\\resources\\excelfiles\\downloaded_files_data.xls";
+//    method and mapping for creating excel file and downloading it
+
     private static final String APPLICATION_XLS = "application/vnd.ms-excel";
 
     private File createFile() throws IOException {
@@ -61,19 +62,9 @@ public class RaksCodeController {
         return file;
     }
 
-//    private File getFile() throws FileNotFoundException {
-//        File file = new File(FILE_PATH);
-//        if (!file.exists()){
-//            throw new FileNotFoundException("file with path: " + FILE_PATH + " was not found.");
-//        }
-//        return file;
-//    }
-
     @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
-//    @RequestMapping(value = "/a", method = RequestMethod.GET, produces = APPLICATION_PDF)
     public @ResponseBody void downloadA(HttpServletResponse response) throws IOException {
         File file = createFile();
-//        File file = getFile();
         InputStream in = new FileInputStream(new File("excelFileCreated.xls"));
 
         response.setContentType(APPLICATION_XLS);
