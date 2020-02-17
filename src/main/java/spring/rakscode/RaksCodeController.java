@@ -10,6 +10,8 @@ import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
 import spring.excel.ExcelWriterImpl;
 import spring.repository.DataStorageImpl;
+import spring.service.CdrFilesServiceImpl;
+import spring.service.RaksCodeServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -17,6 +19,9 @@ import java.util.Set;
 
 @Controller
 public class RaksCodeController {
+
+    private CdrFilesServiceImpl cdrFilesServiceImpl;
+    private RaksCodeServiceImpl raksCodeServiceImpl;
 
     private DataStorageImpl dataStorageImpl;
     private FileDownloaderImpl fileDownloader;

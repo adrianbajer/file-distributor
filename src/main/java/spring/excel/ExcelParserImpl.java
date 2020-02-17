@@ -62,8 +62,8 @@ public class ExcelParserImpl implements ExcelParser{
                     String cellValue = row.getCell(0).getStringCellValue();
                     for(String actualisationArea : actualisationAreasList) {
                         if(cellValue.equals(actualisationArea)) {
-                            cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
-                                    row.getCell(15).toString(),row.getCell(16).toString()));
+//                            cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
+//                                    row.getCell(15).toString(),row.getCell(16).toString()));
                             break;
                         }
                     }
