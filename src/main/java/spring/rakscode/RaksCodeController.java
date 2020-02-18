@@ -15,6 +15,7 @@ import spring.service.RaksCodeServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -27,7 +28,10 @@ public class RaksCodeController {
     private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriterImpl;
 
-    public RaksCodeController() {
+    public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
+        this.cdrFilesServiceImpl = cdrFilesServiceImpl;
+        this.raksCodeServiceImpl = raksCodeServiceImpl;
+
         dataStorageImpl = new DataStorageImpl();
         fileDownloader = new FileDownloaderImpl();
         excelWriterImpl = new ExcelWriterImpl();
@@ -39,15 +43,18 @@ public class RaksCodeController {
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
-    public ModelAndView showform(Model model) {
-        return new ModelAndView("rakscode/raksform","rakscode", new RaksCode());
+    public String showform(Model model) {
+        List<RaksCode> raksCodeList = raksCodeServiceImpl.getAll();
+        model.addAttribute("rakscode", new RaksCode());
+        model.addAttribute("raksCodeList", raksCodeList);
+        return "rakscode/raksform";
     }
 
 
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
 
-        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
+        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
         }
@@ -61,7 +68,8 @@ public class RaksCodeController {
 
     @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
     public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
-        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
+        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+//        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
         File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
         InputStream in = new FileInputStream(file);
 
@@ -92,4 +100,6 @@ public class RaksCodeController {
     public String messageNoProject() {
         return "rakscode/messagenoproject";
     }
+
+
 }

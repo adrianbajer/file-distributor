@@ -35,11 +35,11 @@ public class RaksCode {
     private String raksCode;
 
     @Column(name = "UserName")
-    @NonNull
+//    @NonNull
     private UserName userName;
 
     @Column(name = "JobType")
-    @NonNull
+//    @NonNull
     private JobType jobType;
 
 
@@ -63,16 +63,20 @@ public class RaksCode {
     public RaksCode() {
     }
 
-    public RaksCode(Set<CdrFile> cdrFileSet, @NonNull String raksCode, @NonNull UserName userName,
-                    @NonNull JobType jobType) {
+    public RaksCode(Set<CdrFile> cdrFileSet, @NonNull String raksCode, UserName userName,
+                    JobType jobType) {
+//    public RaksCode(Set<CdrFile> cdrFileSet, @NonNull String raksCode, @NonNull UserName userName,
+//                @NonNull JobType jobType) {
         this.cdrFileSet = cdrFileSet;
         this.raksCode = raksCode;
         this.userName = userName;
         this.jobType = jobType;
     }
 
-    public RaksCode(int id, @NonNull String raksCode, @NonNull UserName userName,
-                    @NonNull JobType jobType) {
+    public RaksCode(int id, @NonNull String raksCode, UserName userName,
+                    JobType jobType) {
+//     public RaksCode(int id, @NonNull String raksCode, @NonNull UserName userName,
+//        @NonNull JobType jobType) {
         this.id = id;
         this.raksCode = raksCode;
         this.userName = userName;
