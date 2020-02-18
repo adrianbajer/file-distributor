@@ -7,7 +7,7 @@ import spring.rakscode.RaksCode;
 import java.util.List;
 
 @Repository
-public interface RaksCodesRepository extends CrudRepository<RaksCode, Long> {
+public interface RaksCodesRepository extends CrudRepository<RaksCode, Integer> {
 
     @Override
     List<RaksCode> findAll();

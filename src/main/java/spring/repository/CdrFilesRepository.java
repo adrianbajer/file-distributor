@@ -7,7 +7,7 @@ import spring.cdrfiles.CdrFile;
 import java.util.List;
 
 @Repository
-public interface CdrFilesRepository extends CrudRepository<CdrFile, Long> {
+public interface CdrFilesRepository extends CrudRepository<CdrFile, Integer> {
 
     @Override
     List<CdrFile> findAll();
