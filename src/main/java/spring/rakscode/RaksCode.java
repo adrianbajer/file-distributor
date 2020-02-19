@@ -35,10 +35,12 @@ public class RaksCode {
     private String raksCode;
 
     @Column(name = "UserName")
+    @Enumerated(EnumType.STRING)
 //    @NonNull
     private UserName userName;
 
     @Column(name = "JobType")
+    @Enumerated(EnumType.STRING)
 //    @NonNull
     private JobType jobType;
 

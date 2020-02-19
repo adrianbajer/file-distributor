@@ -2,8 +2,8 @@ package spring.rakscode;
 
 public enum UserName {
     ADRIAN("Adrian"),
-    BOLEK("Bolek"),
-    LOLEK("Lolek");
+    JANE("Jane"),
+    GEORGE("George");
 
     private String name;
 

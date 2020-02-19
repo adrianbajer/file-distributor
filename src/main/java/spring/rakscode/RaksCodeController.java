@@ -43,7 +43,7 @@ public class RaksCodeController {
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
-    public String showform(Model model) {
+    public String showForm(Model model) {
         List<RaksCode> raksCodeList = raksCodeServiceImpl.getAll();
         model.addAttribute("rakscode", new RaksCode());
         model.addAttribute("raksCodeList", raksCodeList);
@@ -53,7 +53,7 @@ public class RaksCodeController {
 
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
-
+        System.out.println(raksCode.toString());
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
@@ -69,6 +69,8 @@ public class RaksCodeController {
     @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
     public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+        raksCodeServiceImpl.update(raksCode);
+//        System.out.println(raksCode.toString());
 //        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
         File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
         InputStream in = new FileInputStream(file);
