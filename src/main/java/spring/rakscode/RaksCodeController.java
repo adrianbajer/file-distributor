@@ -20,20 +20,21 @@ import java.util.Set;
 
 @Controller
 public class RaksCodeController {
-
+    private List<RaksCode> raksCodeList;
     private CdrFilesServiceImpl cdrFilesServiceImpl;
     private RaksCodeServiceImpl raksCodeServiceImpl;
 
-    private DataStorageImpl dataStorageImpl;
-    private FileDownloaderImpl fileDownloader;
+//    private DataStorageImpl dataStorageImpl;
+//    private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriterImpl;
 
     public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
         this.cdrFilesServiceImpl = cdrFilesServiceImpl;
         this.raksCodeServiceImpl = raksCodeServiceImpl;
+        raksCodeList = raksCodeServiceImpl.getAll();
 
-        dataStorageImpl = new DataStorageImpl();
-        fileDownloader = new FileDownloaderImpl();
+//        dataStorageImpl = new DataStorageImpl();
+//        fileDownloader = new FileDownloaderImpl();
         excelWriterImpl = new ExcelWriterImpl();
     }
 
@@ -44,7 +45,7 @@ public class RaksCodeController {
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
     public String showForm(Model model) {
-        List<RaksCode> raksCodeList = raksCodeServiceImpl.getAll();
+        raksCodeList = raksCodeServiceImpl.getAll();
         model.addAttribute("rakscode", new RaksCode());
         model.addAttribute("raksCodeList", raksCodeList);
         return "rakscode/raksform";
@@ -53,7 +54,6 @@ public class RaksCodeController {
 
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
-        System.out.println(raksCode.toString());
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
         if (cdrFileSet.size() == 0) {
             return new ModelAndView("redirect:/message/noproject");
@@ -69,9 +69,12 @@ public class RaksCodeController {
     @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
     public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
-        raksCodeServiceImpl.update(raksCode);
-//        System.out.println(raksCode.toString());
-//        Set<CdrFile> cdrFileSet = dataStorageImpl.getSetOfCdrFiles(raksCode);
+
+        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
+        raksCodeToUpdate.setUserName(raksCode.getUserName());
+        raksCodeToUpdate.setJobType(raksCode.getJobType());
+        updateRaksCodeInDatabase(raksCodeToUpdate);
+
         File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
         InputStream in = new FileInputStream(file);
 
@@ -80,8 +83,6 @@ public class RaksCodeController {
         response.setHeader("Content-Length", String.valueOf(file.length()));
         FileCopyUtils.copy(in, response.getOutputStream());
     }
-
-
 
     @RequestMapping("/message/failed")
     public String messageFailed() {
@@ -101,6 +102,20 @@ public class RaksCodeController {
     @RequestMapping("/message/noproject")
     public String messageNoProject() {
         return "rakscode/messagenoproject";
+    }
+
+
+
+    private RaksCode getRaksCodeById(@RequestParam int id) {
+        return raksCodeList.stream().filter(f -> f.getId() == id).findFirst().get();
+    }
+
+    private void updateRaksCodeInDatabase(RaksCode raksCode) {
+        try {
+            raksCodeServiceImpl.update(raksCode);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
 
