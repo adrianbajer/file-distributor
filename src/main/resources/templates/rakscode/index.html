@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="www.thymeleaf.org" xmlns:style="http://www.w3.org/1999/xhtml">
+<html lang="pl" xmlns:th="www.thymeleaf.org" xmlns:style="http://www.w3.org/1999/xhtml"
+      xmlns:background-color="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>File Distributor</title>
@@ -7,16 +8,10 @@
 <body bgcolor="#6495ed">
 <div>
     <h2>File Distributor</h2><br>
-    <p style=margin-top:-25px;> Application for searching and downloading files. Designed for use in the cartography department in one of the major tourist publishing houses.<br>
+    <p style=margin-top:-25px;> Application designed for one of the tourist publishing houses.<br>
         It facilitates management of the file flow in publishing process.</p><br>
 
-    <p style="margin-top:-25px; font-weight: bold;";>How it works?</p>
-    <p style=margin-top:-10px;>
-        Files are marked by a code called RAKS code. Application diplays a form where user selects RAKS code, name and type of job. Basing on user's input<br>
-        and data stored in the application code, application finds corresponding files, copies them to selected directory or displays their data. <br>
-        Additionally it creates an excel file where necessary data are saved (who and for what purpose has downloaded files).<br>
-    </p><br>
-    <a href="/raksform">Go to the RAKS code form</a><br>
+    <button onclick="window.location.href = '/raksform';">Start</button>
 </div>
 </body>
 </html>

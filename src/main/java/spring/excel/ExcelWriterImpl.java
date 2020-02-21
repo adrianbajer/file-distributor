@@ -16,7 +16,7 @@ public class ExcelWriterImpl implements ExcelWriter {
     public File createAndFillExcelFile(Set<CdrFile> cdrFilesSet, RaksCode raksCode) {
 
         try {
-            String filename = "NewExcelFile.xls" ;
+            String filename = raksCode.getRaksCode() + ".xls" ;
             HSSFWorkbook workbook = new HSSFWorkbook();
             HSSFSheet cdrFilesSheet = workbook.createSheet("cdrFiles");
             Row headRow = cdrFilesSheet.createRow(0);
