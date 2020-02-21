@@ -23,18 +23,12 @@ public class RaksCodeController {
     private List<RaksCode> raksCodeList;
     private CdrFilesServiceImpl cdrFilesServiceImpl;
     private RaksCodeServiceImpl raksCodeServiceImpl;
-
-//    private DataStorageImpl dataStorageImpl;
-//    private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriterImpl;
 
     public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
         this.cdrFilesServiceImpl = cdrFilesServiceImpl;
         this.raksCodeServiceImpl = raksCodeServiceImpl;
         raksCodeList = raksCodeServiceImpl.getAll();
-
-//        dataStorageImpl = new DataStorageImpl();
-//        fileDownloader = new FileDownloaderImpl();
         excelWriterImpl = new ExcelWriterImpl();
     }
 
@@ -62,7 +56,7 @@ public class RaksCodeController {
     }
 
 
-//    method and mapping for creating excel file and downloading it
+//    @@@@ method and mapping for creating excel file and downloading it @@@@
 
     private static final String APPLICATION_XLS = "application/vnd.ms-excel";
 
@@ -70,10 +64,24 @@ public class RaksCodeController {
     public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
 
+        //raksCode processed by ThymeLeaf has name = id, so to update database properly,
+//        an original raksCode is taken from database, its two lacking attributes are added (taken from raksCode sent by ThymeLeaf)
+//        and then raksCodeToUpdate is send back to database
+
         RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
         raksCodeToUpdate.setUserName(raksCode.getUserName());
         raksCodeToUpdate.setJobType(raksCode.getJobType());
         updateRaksCodeInDatabase(raksCodeToUpdate);
+
+//        next part of code updates "place" field of each cdrFile in cdrFileSet,
+//        according to raksCode UserName value
+
+        for(CdrFile cdrFile : cdrFileSet){
+            cdrFile.setPlace(raksCode.getUserName().getName());
+            updateCdrFileInDatabase(cdrFile);
+        }
+
+//        here an excel file is created and filled with values
 
         File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
         InputStream in = new FileInputStream(file);
@@ -113,6 +121,14 @@ public class RaksCodeController {
     private void updateRaksCodeInDatabase(RaksCode raksCode) {
         try {
             raksCodeServiceImpl.update(raksCode);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCdrFileInDatabase(CdrFile cdrFile) {
+        try {
+            cdrFilesServiceImpl.update(cdrFile);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

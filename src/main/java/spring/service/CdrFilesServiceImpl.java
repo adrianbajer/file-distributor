@@ -17,21 +17,21 @@ public class CdrFilesServiceImpl implements CdrFilesService{
 
     @Override
     public void create(CdrFile cdrFile) {
-
+        cdrFilesRepository.save(cdrFile);
     }
 
     @Override
     public List<CdrFile> getAll() {
-        return null;
+        return cdrFilesRepository.findAll();
     }
 
     @Override
     public void update(CdrFile cdrFile) {
-
+        cdrFilesRepository.save(cdrFile);
     }
 
     @Override
     public void delete(CdrFile cdrFile) {
-
+        cdrFilesRepository.delete(cdrFile);
     }
 }

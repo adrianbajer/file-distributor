@@ -34,7 +34,7 @@ public class ExcelWriterImpl implements ExcelWriter {
                 row.createCell(1).setCellValue(raksCode.getUserName().getName());
                 row.createCell(2).setCellValue(cdrFile.getRegion());
                 row.createCell(3).setCellValue(cdrFile.getType());
-                row.createCell(4).setCellValue(raksCode.getJobType().toString());
+                row.createCell(4).setCellValue(raksCode.getJobType().getType());
                 i++;
             }
 
