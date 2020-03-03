@@ -6,6 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan(basePackages = {
 		"spring.cdrfiles",
+		"spring.excel",
 		"spring.rakscode",
 		"spring.repository",
 		"spring.service"
