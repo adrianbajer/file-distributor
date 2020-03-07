@@ -1,19 +1,25 @@
 package spring.rakscode;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
+import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 import spring.repository.DataStorageImpl;
 import spring.service.CdrFilesServiceImpl;
 import spring.service.RaksCodeServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
 import java.util.Set;
@@ -24,18 +30,23 @@ public class RaksCodeController {
     private CdrFilesServiceImpl cdrFilesServiceImpl;
     private RaksCodeServiceImpl raksCodeServiceImpl;
     private ExcelWriterImpl excelWriterImpl;
+    private ExcelParserImpl excelParserImpl;
 
     public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
         this.cdrFilesServiceImpl = cdrFilesServiceImpl;
         this.raksCodeServiceImpl = raksCodeServiceImpl;
         raksCodeList = raksCodeServiceImpl.getAll();
         excelWriterImpl = new ExcelWriterImpl();
+        excelParserImpl = new ExcelParserImpl();
     }
+
+//    -------------------------------------------------------------------
 
     @RequestMapping("/")
     public String indexGet() {
         return "rakscode/index";
     }
+
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
     public String showForm(Model model) {
@@ -56,7 +67,9 @@ public class RaksCodeController {
     }
 
 
-//    @@@@ method and mapping for creating excel file and downloading it @@@@
+//    -------------------------------------------------------------------
+//    @@@@ mappings for creating excel file and downloading it @@@@
+//    -------------------------------------------------------------------
 
     private static final String APPLICATION_XLS = "application/vnd.ms-excel";
 
@@ -92,6 +105,35 @@ public class RaksCodeController {
         FileCopyUtils.copy(in, response.getOutputStream());
     }
 
+
+//    -------------------------------------------------------------------
+//    @@@@ mappings for uploading excel file and updating database @@@@
+//    -------------------------------------------------------------------
+
+    @RequestMapping(value = "/givefiles", params="action=upload")
+    public String showUploadForm() {
+        return "rakscode/uploading";
+    }
+
+    @RequestMapping(value="/upload",method= RequestMethod.POST)
+    public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
+//        String path=session.getServletContext().getRealPath("/");
+        String fullFilename = file.getOriginalFilename();
+        String filenameWithoutExtension = fullFilename.substring(0, 11);
+        RaksCode raksCodeFromUploadedFile = getRaksCodeByName(filenameWithoutExtension);
+
+        Set<CdrFile> cdrFileSet = excelParserImpl.getSetOfCdrFilesFromUploadedFile(file,raksCodeFromUploadedFile);
+
+        for(CdrFile cdrFile : cdrFileSet){
+            updateCdrFileInDatabase(cdrFile);
+        }
+
+        Set<CdrFile> cdrFileSetFromDatabase = raksCodeFromUploadedFile.getCdrFileSet();
+
+        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSetFromDatabase);
+    }
+
+
     @RequestMapping("/message/failed")
     public String messageFailed() {
         return "rakscode/messagefailed";
@@ -116,6 +158,10 @@ public class RaksCodeController {
 
     private RaksCode getRaksCodeById(@RequestParam int id) {
         return raksCodeList.stream().filter(f -> f.getId() == id).findFirst().get();
+    }
+
+    private RaksCode getRaksCodeByName(@RequestParam String name) {
+        return raksCodeList.stream().filter(f -> f.getRaksCode().equals(name)).findFirst().get();
     }
 
     private void updateRaksCodeInDatabase(RaksCode raksCode) {

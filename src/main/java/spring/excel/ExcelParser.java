@@ -11,6 +11,6 @@ public interface ExcelParser {
 
     Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode);
 
-//    Set<CdrFile> readDataFromFile(MultipartFile file);
+    Set<CdrFile> getSetOfCdrFilesFromUploadedFile(MultipartFile file, RaksCode raksCode);
 
 }

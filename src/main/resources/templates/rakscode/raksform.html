@@ -13,9 +13,9 @@
         <p style="font-weight: bold;";>How it works?</p>
         <p style=margin-top:-10px;>
             Publications are marked by a code called RAKS code.<br>
-            Choose one of the codes and click "View" - you will see component files for the publication.<br>
-            Choose one of the codes and click "Download" - you will receive Excel file with attributes of component files.<br>
-            Besides, "Download" command changes component files' attributes in database.<br>
+            Choose one of the codes and click "View" - you will see component files of the publication.<br>
+            Choose one of the codes and click "Download" - you will receive an Excel file with attributes of component files.<br>
+            If you click "Upload" - you may update component files' attributes. Change data in downloaded Excel file and upload it.<br>
         </p><br>
 
         <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="get">
@@ -42,8 +42,9 @@
             <p style="font-weight: bold;"></p><br>
             <p style="font-weight: bold;"></p><br>
 
-            <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="download">Download</button>
             <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action" value="view">View</button>
+            <button style="margin-top:-25px; background-color: orange" type="submit" name="action" value="download">Download</button>
+            <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="upload">Upload</button>
         </form>
         <hr>
     </div>

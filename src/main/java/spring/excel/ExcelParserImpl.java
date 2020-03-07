@@ -9,6 +9,7 @@ import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class ExcelParserImpl implements ExcelParser{
@@ -87,6 +88,35 @@ public class ExcelParserImpl implements ExcelParser{
 
 
             file.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return cdrFilesSet;
+    }
+
+    @Override
+    public Set<CdrFile> getSetOfCdrFilesFromUploadedFile(MultipartFile file, RaksCode raksCode) {
+
+        Set<CdrFile> cdrFilesSet = raksCode.getCdrFileSet();
+
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet cdrFilesFromUploadedFile = workbook.getSheetAt(0);
+
+            int i = 1;
+            for (CdrFile cdrFile : cdrFilesSet){
+                Row row = cdrFilesFromUploadedFile.getRow(i);
+                cdrFile.setName(row.getCell(0).toString());
+                cdrFile.setPlace(row.getCell(1).toString());
+                cdrFile.setRegion(row.getCell(2).toString());
+                cdrFile.setType(row.getCell(3).toString());
+                i++;
+            }
+
+            inputStream.close();
 
         } catch (IOException e) {
             e.printStackTrace();
