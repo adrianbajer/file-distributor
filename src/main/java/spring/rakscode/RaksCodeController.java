@@ -1,8 +1,5 @@
 package spring.rakscode;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -11,10 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
-import spring.cdrfiles.FileDownloaderImpl;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
-import spring.repository.DataStorageImpl;
 import spring.service.CdrFilesServiceImpl;
 import spring.service.RaksCodeServiceImpl;
 
@@ -77,22 +72,25 @@ public class RaksCodeController {
     public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
 
-        //raksCode processed by ThymeLeaf has name = id, so to update database properly,
-//        an original raksCode is taken from database, its two lacking attributes are added (taken from raksCode sent by ThymeLeaf)
-//        and then raksCodeToUpdate is send back to database
-
         RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
-        raksCodeToUpdate.setUserName(raksCode.getUserName());
-        raksCodeToUpdate.setJobType(raksCode.getJobType());
         updateRaksCodeInDatabase(raksCodeToUpdate);
 
-//        next part of code updates "place" field of each cdrFile in cdrFileSet,
-//        according to raksCode UserName value
-
-        for(CdrFile cdrFile : cdrFileSet){
-            cdrFile.setPlace(raksCode.getUserName().getName());
-            updateCdrFileInDatabase(cdrFile);
-        }
+//        //raksCode processed by ThymeLeaf has name = id, so to update database properly,
+//////        an original raksCode is taken from database, its two lacking attributes are added (taken from raksCode sent by ThymeLeaf)
+//////        and then raksCodeToUpdate is send back to database
+////
+////        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
+////        raksCodeToUpdate.setUserName(raksCode.getUserName());
+////        raksCodeToUpdate.setJobType(raksCode.getJobType());
+////        updateRaksCodeInDatabase(raksCodeToUpdate);
+////
+//////        next part of code updates "place" field of each cdrFile in cdrFileSet,
+//////        according to raksCode UserName value
+////
+////        for(CdrFile cdrFile : cdrFileSet){
+////            cdrFile.setPlace(raksCode.getUserName().getName());
+////            updateCdrFileInDatabase(cdrFile);
+////        }
 
 //        here an excel file is created and filled with values
 
