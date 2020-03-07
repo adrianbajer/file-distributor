@@ -4,6 +4,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.web.multipart.MultipartFile;
 import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
@@ -93,4 +94,31 @@ public class ExcelParserImpl implements ExcelParser{
 
         return cdrFilesSet;
     }
+
+//    @Override
+//    public Set<CdrFile> readDataFromFile(MultipartFile file) {
+//        try {
+//            InputStream inputStream = file.getInputStream();
+//            Workbook workbook = new HSSFWorkbook(inputStream);
+//            Sheet cdrFilesFromUploadedFile = workbook.getSheetAt(0);
+//            Set <CdrFile> cdrFilesSet = new HashSet<>();
+//
+//            for(Row row : cdrFilesFromUploadedFile) {
+//                if (row.getRowNum() > 1) {
+//                    cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
+//                                    row.getCell(15).toString(),row.getCell(16).toString()));
+//
+//
+//            Sheet cdrFilesDataToUpdate = workbook.getSheetAt(0);
+//            String cellValueFromUploadedFile = cdrFilesDataToUpdate.getRow(2).getCell(0).getStringCellValue();
+//
+//            System.out.println(cellValueFromUploadedFile);
+//
+//            inputStream.close();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return cdrFilesSet;
+//    }
 }

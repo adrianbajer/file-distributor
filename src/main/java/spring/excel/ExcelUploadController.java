@@ -14,13 +14,28 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import spring.rakscode.RaksCode;
+import spring.service.CdrFilesServiceImpl;
+import spring.service.RaksCodeServiceImpl;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.sql.SQLOutput;
+import java.util.List;
 
 @Controller
 public class ExcelUploadController {
+    private List<RaksCode> raksCodeList;
+    private CdrFilesServiceImpl cdrFilesServiceImpl;
+    private RaksCodeServiceImpl raksCodeServiceImpl;
+    private ExcelWriterImpl excelWriterImpl;
+
+    public ExcelUploadController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
+        this.cdrFilesServiceImpl = cdrFilesServiceImpl;
+        this.raksCodeServiceImpl = raksCodeServiceImpl;
+        raksCodeList = raksCodeServiceImpl.getAll();
+        excelWriterImpl = new ExcelWriterImpl();
+    }
 
     @RequestMapping("/uploadform")
     public String showUploadForm() {
@@ -30,30 +45,25 @@ public class ExcelUploadController {
     @RequestMapping(value="/upload",method= RequestMethod.POST)
     public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
         String path=session.getServletContext().getRealPath("/");
-        String filename=file.getOriginalFilename();
+        String fullFilename = file.getOriginalFilename();
+        String filenameWithoutExtension = fullFilename.substring(0, fullFilename.length() - 4);
 
-        System.out.println(path+" "+filename);
-        try{
-            byte barr[]=file.getBytes();
+        System.out.println(filenameWithoutExtension);
 
-            BufferedOutputStream bout=new BufferedOutputStream(
-                    new FileOutputStream(path+"/"+filename));
-            bout.write(barr);
-            bout.flush();
-            bout.close();
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet cdrFilesDataToUpdate = workbook.getSheetAt(0);
+            String cellValueFromUploadedFile = cdrFilesDataToUpdate.getRow(2).getCell(0).getStringCellValue();
 
-        }catch(Exception e){System.out.println(e);}
-        return new ModelAndView("rakscode/uploadedfilename","filename",path+"/"+filename);
-    }
+            System.out.println(cellValueFromUploadedFile);
 
+            inputStream.close();
 
-//    @RequestMapping(value="/upload",method= RequestMethod.POST)
-//    public String handleFileUpload(@RequestParam MultipartFile file, HttpSession session, Model model){
-//        String path=session.getServletContext().getRealPath("/");
-//        String filename=file.getOriginalFilename();
-//        model.addAttribute("fileName", filename);
-//
-//        System.out.println(path+" "+filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 //        try{
 //            byte barr[]=file.getBytes();
 //
@@ -64,32 +74,12 @@ public class ExcelUploadController {
 //            bout.close();
 //
 //        }catch(Exception e){System.out.println(e);}
-//        return "rakscode/uploadedfilename";
-//    }
 
+        return new ModelAndView("rakscode/uploadedfilename","filename",filenameWithoutExtension);
+    }
 
-//    @RequestMapping("/upload")
-//    public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-////    public String handleFileUpload() {
-//
-//        System.out.println("I'm Uploading Controller");
-////        try {
-////            InputStream inputStream = file.getInputStream();
-////            Workbook workbook = new HSSFWorkbook(inputStream);
-////            Sheet cdrFilesDataToUpdate = workbook.getSheetAt(0);
-////            String cellValueFromUploadedFile = cdrFilesDataToUpdate.getRow(1).getCell(0).getStringCellValue();
-////
-////            System.out.println(cellValueFromUploadedFile);
-////
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-//
-//
-////        storageService.store(file);
-////        redirectAttributes.addFlashAttribute("message",
-////                "You successfully uploaded " + file.getOriginalFilename() + "!");
-//
-//        return "rakscode/uploading";
-//    }
+    private RaksCode getRaksCodeByName(@RequestParam String name) {
+        return raksCodeList.stream().filter(f -> f.getRaksCode() == name).findFirst().get();
+    }
+
 }
