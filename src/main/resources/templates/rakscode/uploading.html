@@ -1,26 +1,24 @@
-<html xmlns:th="https://www.thymeleaf.org">
-<body>
-
-<!--<div th:if="${message}">-->
-<!--    <h2 th:text="${message}"/>-->
-<!--</div>-->
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="www.thymeleaf.org" xmlns:style="http://www.w3.org/1999/xhtml"
+      xmlns:background-color="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload file</title>
+</head>
+<body bgcolor="#6495ed">
 
 <div>
+    <hr>
+    <h3>Upload file form</h3>
     <form enctype="multipart/form-data" action="/upload" method="post">
-        <table>
-            <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-        </table>
+        <p style="font-weight: bold;">Choose your file and then click "Upload"</p>
+        <input type="file" name="file" /><br><br>
+        <input style="background-color: yellow" type="submit" value="Upload" />
     </form>
+    <hr>
+    <br>
+    <button style="background-color: lightyellow" onclick="window.location.href = '/raksform';">Back to RAKS form</button>
 </div>
-
-<!--<div>-->
-<!--    <ul>-->
-<!--        <li th:each="file : ${files}">-->
-<!--            <a th:href="${file}" th:text="${file}" />-->
-<!--        </li>-->
-<!--    </ul>-->
-<!--</div>-->
 
 </body>
 </html>

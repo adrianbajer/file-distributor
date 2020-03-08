@@ -7,8 +7,10 @@ VALUES ('Poland 800', 'Archive', 'Poland', 'road map'),
        ('Italy 750', 'Archive', 'Italy', 'road map'),
        ('Rome 40', 'Archive', 'Rome', 'road map');
 
+-- raks_code has to be 12 characters long to ensure application work properly
+
 INSERT INTO raks_codes(raks_code, user_name, job_type)
-VALUES  ('Italy_FOLD8', null, null),
+VALUES  ('Italy._FOLD8', null, null),
         ('Poland_FOLD6', null, null),
         ('Warsaw_FOLD6', null, null),
         ('Warsaw_POCKT', null, null),

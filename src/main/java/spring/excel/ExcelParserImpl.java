@@ -16,6 +16,36 @@ public class ExcelParserImpl implements ExcelParser{
 
 
     @Override
+    public Set<CdrFile> getSetOfCdrFilesFromUploadedFile(MultipartFile file, RaksCode raksCode) {
+
+        Set<CdrFile> cdrFilesSet = raksCode.getCdrFileSet();
+
+        try {
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet cdrFilesFromUploadedFile = workbook.getSheetAt(0);
+
+            int i = 1;
+            for (CdrFile cdrFile : cdrFilesSet){
+                Row row = cdrFilesFromUploadedFile.getRow(i);
+                cdrFile.setName(row.getCell(0).toString());
+                cdrFile.setPlace(row.getCell(1).toString());
+                cdrFile.setRegion(row.getCell(2).toString());
+                cdrFile.setType(row.getCell(3).toString());
+                i++;
+            }
+
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return cdrFilesSet;
+    }
+
+
+    @Override
     public Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode) {
         Workbook workbook = null;
         FileInputStream file = null;
@@ -96,60 +126,5 @@ public class ExcelParserImpl implements ExcelParser{
         return cdrFilesSet;
     }
 
-    @Override
-    public Set<CdrFile> getSetOfCdrFilesFromUploadedFile(MultipartFile file, RaksCode raksCode) {
-
-        Set<CdrFile> cdrFilesSet = raksCode.getCdrFileSet();
-
-        try {
-            InputStream inputStream = file.getInputStream();
-            Workbook workbook = new HSSFWorkbook(inputStream);
-            Sheet cdrFilesFromUploadedFile = workbook.getSheetAt(0);
-
-            int i = 1;
-            for (CdrFile cdrFile : cdrFilesSet){
-                Row row = cdrFilesFromUploadedFile.getRow(i);
-                cdrFile.setName(row.getCell(0).toString());
-                cdrFile.setPlace(row.getCell(1).toString());
-                cdrFile.setRegion(row.getCell(2).toString());
-                cdrFile.setType(row.getCell(3).toString());
-                i++;
-            }
-
-            inputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return cdrFilesSet;
-    }
-
-//    @Override
-//    public Set<CdrFile> readDataFromFile(MultipartFile file) {
-//        try {
-//            InputStream inputStream = file.getInputStream();
-//            Workbook workbook = new HSSFWorkbook(inputStream);
-//            Sheet cdrFilesFromUploadedFile = workbook.getSheetAt(0);
-//            Set <CdrFile> cdrFilesSet = new HashSet<>();
-//
-//            for(Row row : cdrFilesFromUploadedFile) {
-//                if (row.getRowNum() > 1) {
-//                    cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
-//                                    row.getCell(15).toString(),row.getCell(16).toString()));
-//
-//
-//            Sheet cdrFilesDataToUpdate = workbook.getSheetAt(0);
-//            String cellValueFromUploadedFile = cdrFilesDataToUpdate.getRow(2).getCell(0).getStringCellValue();
-//
-//            System.out.println(cellValueFromUploadedFile);
-//
-//            inputStream.close();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return cdrFilesSet;
-//    }
 }
 

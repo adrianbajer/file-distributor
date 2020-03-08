@@ -117,7 +117,8 @@ public class RaksCodeController {
     public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
 //        String path=session.getServletContext().getRealPath("/");
         String fullFilename = file.getOriginalFilename();
-        String filenameWithoutExtension = fullFilename.substring(0, 11);
+        String filenameWithoutExtension = fullFilename.substring(0, 12);
+        System.out.println(filenameWithoutExtension);
         RaksCode raksCodeFromUploadedFile = getRaksCodeByName(filenameWithoutExtension);
 
         Set<CdrFile> cdrFileSet = excelParserImpl.getSetOfCdrFilesFromUploadedFile(file,raksCodeFromUploadedFile);
