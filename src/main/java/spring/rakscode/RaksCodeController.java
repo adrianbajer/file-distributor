@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Controller
@@ -113,15 +114,31 @@ public class RaksCodeController {
         return "rakscode/uploading";
     }
 
+    @RequestMapping(value = "/uploading")
+    public String showUploadFormFromMessageDialog() {
+        return "rakscode/uploading";
+    }
+
     @RequestMapping(value="/upload",method= RequestMethod.POST)
     public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
 //        String path=session.getServletContext().getRealPath("/");
         String fullFilename = file.getOriginalFilename();
-        String filenameWithoutExtension = fullFilename.substring(0, 12);
-        System.out.println(filenameWithoutExtension);
-        RaksCode raksCodeFromUploadedFile = getRaksCodeByName(filenameWithoutExtension);
+        String filenameWithoutExtension;
 
-        Set<CdrFile> cdrFileSet = excelParserImpl.getSetOfCdrFilesFromUploadedFile(file,raksCodeFromUploadedFile);
+        if (fullFilename.length() > 0){
+            filenameWithoutExtension = fullFilename.substring(0, 12);
+        } else {
+            return new ModelAndView("redirect:/message/nofile");
+        }
+
+        RaksCode raksCodeFromUploadedFile = getRaksCodeByName(filenameWithoutExtension);
+        Set<CdrFile> cdrFileSet;
+
+        if (raksCodeFromUploadedFile != null) {
+            cdrFileSet = excelParserImpl.getSetOfCdrFilesFromUploadedFile(file, raksCodeFromUploadedFile);
+        } else {
+            return new ModelAndView("redirect:/message/notvalidfile");
+        }
 
         for(CdrFile cdrFile : cdrFileSet){
             updateCdrFileInDatabase(cdrFile);
@@ -153,6 +170,16 @@ public class RaksCodeController {
         return "rakscode/messagenoproject";
     }
 
+    @RequestMapping("/message/nofile")
+    public String messageNoFile() {
+        return "rakscode/messagenofile";
+    }
+
+    @RequestMapping("/message/notvalidfile")
+    public String messageNotValidFile() {
+        return "rakscode/messagenotvalidfile";
+    }
+
 
 
     private RaksCode getRaksCodeById(@RequestParam int id) {
@@ -160,7 +187,12 @@ public class RaksCodeController {
     }
 
     private RaksCode getRaksCodeByName(@RequestParam String name) {
-        return raksCodeList.stream().filter(f -> f.getRaksCode().equals(name)).findFirst().get();
+        try {
+            return raksCodeList.stream().filter(f -> f.getRaksCode().equals(name)).findFirst().get();
+        } catch (NoSuchElementException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     private void updateRaksCodeInDatabase(RaksCode raksCode) {

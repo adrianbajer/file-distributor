@@ -1,11 +1,11 @@
 INSERT INTO cdr_files(name, place, region, type)
-VALUES ('Poland 800', 'Archive', 'Poland', 'road map'),
-       ('Warsaw 30', 'Archive', 'Warsaw', 'city map'),
-       ('Cracow 20', 'Archive', 'Cracow', 'city map'),
-       ('Warsaw Center 15', 'Archive', 'Warsaw', 'city map'),
-       ('Cracow Center 10', 'Archive', 'Cracow', 'city map'),
-       ('Italy 750', 'Archive', 'Italy', 'road map'),
-       ('Rome 40', 'Archive', 'Rome', 'road map');
+VALUES ('Poland 800', 'Adrian', 'Poland', 'road map'),
+       ('Warsaw 30', 'Adrian', 'Warsaw', 'city map'),
+       ('Cracow 20', 'Adrian', 'Cracow', 'city map'),
+       ('Warsaw Center 15', 'Adrian', 'Warsaw', 'city map'),
+       ('Cracow Center 10', 'Adrian', 'Cracow', 'city map'),
+       ('Italy 750', 'Adrian', 'Italy', 'road map'),
+       ('Rome 40', 'Adrian', 'Rome', 'road map');
 
 -- raks_code has to be 12 characters long to ensure application work properly
 
