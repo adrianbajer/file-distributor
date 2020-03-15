@@ -1,5 +1,6 @@
 package spring.rakscode;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -123,6 +124,7 @@ public class RaksCodeController {
     public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
 //        String path=session.getServletContext().getRealPath("/");
         String fullFilename = file.getOriginalFilename();
+        String fileExtension = FilenameUtils.getExtension(fullFilename);
         String filenameWithoutExtension;
 
         if (fullFilename.length() > 0){
@@ -134,7 +136,7 @@ public class RaksCodeController {
         RaksCode raksCodeFromUploadedFile = getRaksCodeByName(filenameWithoutExtension);
         Set<CdrFile> cdrFileSet;
 
-        if (raksCodeFromUploadedFile != null) {
+        if (raksCodeFromUploadedFile != null && fileExtension.equals("xls")) {
             cdrFileSet = excelParserImpl.getSetOfCdrFilesFromUploadedFile(file, raksCodeFromUploadedFile);
         } else {
             return new ModelAndView("redirect:/message/notvalidfile");
