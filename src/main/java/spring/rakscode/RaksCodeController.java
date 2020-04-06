@@ -115,6 +115,12 @@ public class RaksCodeController {
         return "rakscode/uploading";
     }
 
+    @RequestMapping(value = "/givefiles", params="action=view_on_map")
+    public String getMap(Model model) throws IOException {
+//        model.addAttribute("points", covid19Parser.getCovidData());
+        return "rakscode/mapranges";
+    }
+
     @RequestMapping(value = "/uploading")
     public String showUploadFormFromMessageDialog() {
         return "rakscode/uploading";
