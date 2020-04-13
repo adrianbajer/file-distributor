@@ -11,28 +11,32 @@ import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
+import spring.maps.Polygon;
 import spring.service.CdrFilesServiceImpl;
+import spring.service.PolygonServiceImpl;
 import spring.service.RaksCodeServiceImpl;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class RaksCodeController {
     private List<RaksCode> raksCodeList;
+    private List<Polygon> polygonList;
     private CdrFilesServiceImpl cdrFilesServiceImpl;
     private RaksCodeServiceImpl raksCodeServiceImpl;
+    private PolygonServiceImpl polygonServiceImpl;
     private ExcelWriterImpl excelWriterImpl;
     private ExcelParserImpl excelParserImpl;
 
-    public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl) {
+    public RaksCodeController(CdrFilesServiceImpl cdrFilesServiceImpl, RaksCodeServiceImpl raksCodeServiceImpl, PolygonServiceImpl polygonServiceImpl) {
         this.cdrFilesServiceImpl = cdrFilesServiceImpl;
         this.raksCodeServiceImpl = raksCodeServiceImpl;
+        this.polygonServiceImpl = polygonServiceImpl;
         raksCodeList = raksCodeServiceImpl.getAll();
+        polygonList = polygonServiceImpl.getAll();
         excelWriterImpl = new ExcelWriterImpl();
         excelParserImpl = new ExcelParserImpl();
     }
@@ -115,10 +119,37 @@ public class RaksCodeController {
         return "rakscode/uploading";
     }
 
+
     @RequestMapping(value = "/givefiles", params="action=view_on_map")
-    public String getMap(Model model) throws IOException {
-//        model.addAttribute("points", covid19Parser.getCovidData());
-        return "rakscode/mapranges";
+    public ModelAndView viewRangesOnMap(RaksCode raksCode, Model model) {
+        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+        if (cdrFileSet.size() == 0) {
+            return new ModelAndView("redirect:/message/noproject");
+        }
+
+        RaksCode raksCodeFromDatabase = getRaksCodeById(raksCode.getId());
+        Polygon polygonFromDatabase = getPolygonById(raksCodeFromDatabase.getPolygonId());
+
+        Polygon polygon = new Polygon();
+        polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
+        polygon.setLeftUpperLon(polygonFromDatabase.getLeftUpperLon());
+        polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
+        polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
+
+        model.addAttribute("polygon", polygon);
+
+
+//        List<Double> polygonCoordinatesList = new ArrayList<>();
+//        List<List<Double>> cornersList = new ArrayList<>()
+//        polygonCoordinatesList.add(polygon.getLeftUpperLat());
+//        polygonCoordinatesList.add(polygon.getLeftUpperLon());
+//        polygonCoordinatesList.add(polygon.getRightLowerLat());
+//        polygonCoordinatesList.add(polygon.getRightLowerLon());
+
+//        Map<Polygon, Set<CdrFile>> polygonWithFilesMap = new HashMap<>();
+//        polygonWithFilesMap.put(polygon, cdrFileSet);
+
+        return new ModelAndView("rakscode/mapranges");
     }
 
     @RequestMapping(value = "/uploading")
@@ -192,6 +223,10 @@ public class RaksCodeController {
 
     private RaksCode getRaksCodeById(@RequestParam int id) {
         return raksCodeList.stream().filter(f -> f.getId() == id).findFirst().get();
+    }
+
+    private Polygon getPolygonById(@RequestParam int id) {
+        return polygonList.stream().filter(f -> f.getId() == id).findFirst().get();
     }
 
     private RaksCode getRaksCodeByName(@RequestParam String name) {

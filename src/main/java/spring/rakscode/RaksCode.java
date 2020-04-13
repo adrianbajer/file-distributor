@@ -2,6 +2,7 @@ package spring.rakscode;
 
 import lombok.*;
 import spring.cdrfiles.CdrFile;
+import spring.maps.Polygon;
 
 import javax.persistence.*
         ;
@@ -22,6 +23,12 @@ public class RaksCode {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<CdrFile> cdrFileSet;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "polygon_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Exclude
+    private Polygon polygon;
 
 
     @Id
@@ -53,6 +60,10 @@ public class RaksCode {
     public void removeCdrFile(CdrFile cdrFile) {
         cdrFileSet.remove(cdrFile);
         cdrFile.getRaksCodeSet().remove(this);
+    }
+
+    public int getPolygonId() {
+        return polygon.getId();
     }
 
     public Set<CdrFile> getCdrFileSet() {

@@ -21,13 +21,31 @@
 
 <script th:inline="javascript">
 
-    // var points = [[${points}]];
+    var polygon = [[${polygon}]];
 
-    var map = L.map('mapid').setView([45, 10], 4);
+    var map = L.map('mapid').setView([polygon.leftUpperLat, polygon.leftUpperLon], 8);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
+
+    var bounds = [[polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]];
+    // create an orange rectangle
+    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+    // zoom the map to the rectangle bounds
+    map.fitBounds(bounds);
+
+    // polygonCoordinatesList.forEach(value => {
+    //     L.marker([value.leftUpperLat, value.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]).addTo(map)
+    //     L.rectangle([polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon],{color: "#ff7800", weight: 1});
+    //         // .bindPopup(value.text)
+    //         // .openPopup();
+    // })
+
+
+    // L.marker([polygon.leftUpperLat, polygon.leftUpperLon]).addTo(map)
+    //     .bindPopup(polygon.leftUpperLat)
+    //     .openPopup();
 
     // points.forEach(value => {
     //     L.marker([value.lat, value.lon]).addTo(map)
