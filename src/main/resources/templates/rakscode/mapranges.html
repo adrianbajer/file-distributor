@@ -15,13 +15,17 @@
 
 
 </head>
-<body>
+<body bgcolor="#6495ed">
 
 <div id="mapid"></div>
 
 <script th:inline="javascript">
 
     var polygon = [[${polygon}]];
+    var text = [[${text}]];
+    var firstline = text.raksCodeName;
+    var secondline = text.componentFilesNames;
+    var popuptext = firstline + '<br>' + secondline;
 
     var map = L.map('mapid').setView([polygon.leftUpperLat, polygon.leftUpperLon], 8);
 
@@ -31,44 +35,14 @@
 
     var bounds = [[polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]];
     // create an orange rectangle
-    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(popuptext);
     // zoom the map to the rectangle bounds
     map.fitBounds(bounds);
 
-    // polygonCoordinatesList.forEach(value => {
-    //     L.marker([value.leftUpperLat, value.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]).addTo(map)
-    //     L.rectangle([polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon],{color: "#ff7800", weight: 1});
-    //         // .bindPopup(value.text)
-    //         // .openPopup();
-    // })
-
-
-    // L.marker([polygon.leftUpperLat, polygon.leftUpperLon]).addTo(map)
-    //     .bindPopup(polygon.leftUpperLat)
-    //     .openPopup();
-
-    // points.forEach(value => {
-    //     L.marker([value.lat, value.lon]).addTo(map)
-    //         .bindPopup(value.text)
-    //         // .openPopup();
-    // })
-
-    // points.forEach(value => {
-    //     // L.marker([value.lat, value.lon]).addTo(map)
-    //     //     .bindPopup(value.text)
-    //     // .openPopup();
-    //
-    //     L.circle([value.lat, value.lon], {
-    //         color: 'red',
-    //         fillColor: '#f03',
-    //         fillOpacity: 0.5,
-    //         radius: value.confirmedCasesAsDiagramsArea*200
-    //     }).addTo(map)
-    //         .bindPopup(value.text);
-    // })
-
-
 </script>
+
+<br>
+<button style="background-color: lightyellow" onclick="window.location.href = '/raksform';">Back to RAKS form</button>
 
 </body>
 </html>

@@ -12,6 +12,7 @@ import spring.cdrfiles.CdrFile;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 import spring.maps.Polygon;
+import spring.maps.PolygonText;
 import spring.service.CdrFilesServiceImpl;
 import spring.service.PolygonServiceImpl;
 import spring.service.RaksCodeServiceImpl;
@@ -130,24 +131,32 @@ public class RaksCodeController {
         RaksCode raksCodeFromDatabase = getRaksCodeById(raksCode.getId());
         Polygon polygonFromDatabase = getPolygonById(raksCodeFromDatabase.getPolygonId());
 
+        StringBuilder firstLineForPolygonPopup = new StringBuilder();
+        firstLineForPolygonPopup.append("RAKS code name: ");
+        firstLineForPolygonPopup.append("[");
+        firstLineForPolygonPopup.append(raksCodeFromDatabase.getRaksCode());
+        firstLineForPolygonPopup.append("] ");
+
+        StringBuilder secondLineForPolygonPopup = new StringBuilder();
+        secondLineForPolygonPopup.append("Component files: ");
+        for(CdrFile cdrFile : cdrFileSet) {
+            secondLineForPolygonPopup.append("[");
+            secondLineForPolygonPopup.append(cdrFile.getName());
+            secondLineForPolygonPopup.append("] ");
+        }
+
         Polygon polygon = new Polygon();
         polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
         polygon.setLeftUpperLon(polygonFromDatabase.getLeftUpperLon());
         polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
         polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
 
+        PolygonText text = new PolygonText();
+        text.setRaksCodeName(firstLineForPolygonPopup.toString());
+        text.setComponentFilesNames(secondLineForPolygonPopup.toString());
+
         model.addAttribute("polygon", polygon);
-
-
-//        List<Double> polygonCoordinatesList = new ArrayList<>();
-//        List<List<Double>> cornersList = new ArrayList<>()
-//        polygonCoordinatesList.add(polygon.getLeftUpperLat());
-//        polygonCoordinatesList.add(polygon.getLeftUpperLon());
-//        polygonCoordinatesList.add(polygon.getRightLowerLat());
-//        polygonCoordinatesList.add(polygon.getRightLowerLon());
-
-//        Map<Polygon, Set<CdrFile>> polygonWithFilesMap = new HashMap<>();
-//        polygonWithFilesMap.put(polygon, cdrFileSet);
+        model.addAttribute("text", text);
 
         return new ModelAndView("rakscode/mapranges");
     }
@@ -159,7 +168,6 @@ public class RaksCodeController {
 
     @RequestMapping(value="/upload",method= RequestMethod.POST)
     public ModelAndView handleFileUpload(@RequestParam MultipartFile file, HttpSession session){
-//        String path=session.getServletContext().getRealPath("/");
         String fullFilename = file.getOriginalFilename();
         String fileExtension = FilenameUtils.getExtension(fullFilename);
         String filenameWithoutExtension;
