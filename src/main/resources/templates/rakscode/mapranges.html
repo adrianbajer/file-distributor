@@ -27,14 +27,13 @@
     var secondline = text.componentFilesNames;
     var popuptext = firstline + '<br>' + secondline;
 
-    var map = L.map('mapid').setView([polygon.leftUpperLat, polygon.leftUpperLon], 8);
+    var map = L.map('mapid');
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     var bounds = [[polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]];
-    // create an orange rectangle
     L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(popuptext);
     // zoom the map to the rectangle bounds
     map.fitBounds(bounds);

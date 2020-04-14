@@ -59,6 +59,10 @@ public class RaksCodeController {
     }
 
 
+//    -------------------------------------------------------------------
+//    @@@@ mappings for viewing files in table form and on a map @@@@
+//    -------------------------------------------------------------------
+
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
         Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
@@ -66,58 +70,6 @@ public class RaksCodeController {
             return new ModelAndView("redirect:/message/noproject");
         }
         return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
-    }
-
-
-//    -------------------------------------------------------------------
-//    @@@@ mappings for creating excel file and downloading it @@@@
-//    -------------------------------------------------------------------
-
-    private static final String APPLICATION_XLS = "application/vnd.ms-excel";
-
-    @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
-    public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
-        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
-
-        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
-        updateRaksCodeInDatabase(raksCodeToUpdate);
-
-//        //raksCode processed by ThymeLeaf has name = id, so to update database properly,
-//////        an original raksCode is taken from database, its two lacking attributes are added (taken from raksCode sent by ThymeLeaf)
-//////        and then raksCodeToUpdate is send back to database
-////
-////        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
-////        raksCodeToUpdate.setUserName(raksCode.getUserName());
-////        raksCodeToUpdate.setJobType(raksCode.getJobType());
-////        updateRaksCodeInDatabase(raksCodeToUpdate);
-////
-//////        next part of code updates "place" field of each cdrFile in cdrFileSet,
-//////        according to raksCode UserName value
-////
-////        for(CdrFile cdrFile : cdrFileSet){
-////            cdrFile.setPlace(raksCode.getUserName().getName());
-////            updateCdrFileInDatabase(cdrFile);
-////        }
-
-//        here an excel file is created and filled with values
-
-        File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
-        InputStream in = new FileInputStream(file);
-
-        response.setContentType(APPLICATION_XLS);
-        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-        response.setHeader("Content-Length", String.valueOf(file.length()));
-        FileCopyUtils.copy(in, response.getOutputStream());
-    }
-
-
-//    -------------------------------------------------------------------
-//    @@@@ mappings for uploading excel file and updating database @@@@
-//    -------------------------------------------------------------------
-
-    @RequestMapping(value = "/givefiles", params="action=upload")
-    public String showUploadForm() {
-        return "rakscode/uploading";
     }
 
 
@@ -161,6 +113,59 @@ public class RaksCodeController {
         return new ModelAndView("rakscode/mapranges");
     }
 
+
+//    -------------------------------------------------------------------
+//    @@@@ mappings for creating excel file and downloading it @@@@
+//    -------------------------------------------------------------------
+
+    private static final String APPLICATION_XLS = "application/vnd.ms-excel";
+
+    @RequestMapping(value = "/givefiles", params="action=download",method = RequestMethod.GET, produces = APPLICATION_XLS)
+    public @ResponseBody void downloadA(HttpServletResponse response, RaksCode raksCode) throws IOException {
+        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+
+        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
+        updateRaksCodeInDatabase(raksCodeToUpdate);
+
+//        //raksCode processed by ThymeLeaf has name = id, so to update database properly,
+//////        an original raksCode is taken from database, its two lacking attributes are added (taken from raksCode sent by ThymeLeaf)
+//////        and then raksCodeToUpdate is send back to database
+////
+////        RaksCode raksCodeToUpdate = getRaksCodeById(raksCode.getId());
+////        raksCodeToUpdate.setUserName(raksCode.getUserName());
+////        raksCodeToUpdate.setJobType(raksCode.getJobType());
+////        updateRaksCodeInDatabase(raksCodeToUpdate);
+////
+//////        next part of code updates "place" field of each cdrFile in cdrFileSet,
+//////        according to raksCode UserName value
+////
+////        for(CdrFile cdrFile : cdrFileSet){
+////            cdrFile.setPlace(raksCode.getUserName().getName());
+////            updateCdrFileInDatabase(cdrFile);
+////        }
+
+
+//        here an excel file is created and filled with values
+
+        File file = excelWriterImpl.createAndFillExcelFile(cdrFileSet, raksCode);
+        InputStream in = new FileInputStream(file);
+
+        response.setContentType(APPLICATION_XLS);
+        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+        response.setHeader("Content-Length", String.valueOf(file.length()));
+        FileCopyUtils.copy(in, response.getOutputStream());
+    }
+
+
+//    -------------------------------------------------------------------
+//    @@@@ mappings for uploading excel file and updating database @@@@
+//    -------------------------------------------------------------------
+
+    @RequestMapping(value = "/givefiles", params="action=upload")
+    public String showUploadForm() {
+        return "rakscode/uploading";
+    }
+
     @RequestMapping(value = "/uploading")
     public String showUploadFormFromMessageDialog() {
         return "rakscode/uploading";
@@ -196,6 +201,7 @@ public class RaksCodeController {
         return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSetFromDatabase);
     }
 
+//    -------------------------------------------------------------------
 
     @RequestMapping("/message/failed")
     public String messageFailed() {
@@ -227,7 +233,7 @@ public class RaksCodeController {
         return "rakscode/messagenotvalidfile";
     }
 
-
+//    -------------------------------------------------------------------
 
     private RaksCode getRaksCodeById(@RequestParam int id) {
         return raksCodeList.stream().filter(f -> f.getId() == id).findFirst().get();
