@@ -44,19 +44,40 @@ public class RaksCodeController {
 
 //    -------------------------------------------------------------------
 
+//    @RequestMapping("/")
+//    public String indexGet() {
+//        return "rakscode/index";
+//    }
+
     @RequestMapping("/")
-    public String indexGet() {
-        return "rakscode/index";
-    }
+    public String showForm(RaksCode raksCode, Model model) {
 
+        if (raksCode.getId() != 0){
 
-    @RequestMapping(value = "/raksform", method = RequestMethod.GET)
-    public String showForm(Model model) {
-        raksCodeList = raksCodeServiceImpl.getAll();
-        model.addAttribute("rakscode", new RaksCode());
+            Polygon polygonFromDatabase = getPolygonById(raksCode.getPolygonId());
+            Polygon polygon = new Polygon();
+            polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
+            polygon.setLeftUpperLon(polygonFromDatabase.getLeftUpperLon());
+            polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
+            polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
+
+            model.addAttribute("polygon", polygon);
+        }
+
+        model.addAttribute("rakscode", raksCode);
         model.addAttribute("raksCodeList", raksCodeList);
-        return "rakscode/raksform";
+
+        return "rakscode/mapranges";
     }
+
+
+//    @RequestMapping(value = "/raksform", method = RequestMethod.GET)
+//    public String showForm(Model model) {
+//        raksCodeList = raksCodeServiceImpl.getAll();
+//        model.addAttribute("rakscode", new RaksCode());
+//        model.addAttribute("raksCodeList", raksCodeList);
+//        return "rakscode/raksform";
+//    }
 
 
 //    -------------------------------------------------------------------

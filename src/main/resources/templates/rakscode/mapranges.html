@@ -22,26 +22,40 @@
 <script th:inline="javascript">
 
     var polygon = [[${polygon}]];
-    var text = [[${text}]];
-    var firstline = text.raksCodeName;
-    var secondline = text.componentFilesNames;
-    var popuptext = firstline + '<br>' + secondline;
+    // var text = [[${text}]];
+    // var firstline = text.raksCodeName;
+    // var secondline = text.componentFilesNames;
+    // var popuptext = firstline + '<br>' + secondline;
 
-    var map = L.map('mapid');
+    var map = L.map('mapid').setView([52.11, 19.42], 4);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     var bounds = [[polygon.leftUpperLat, polygon.leftUpperLon], [polygon.rightLowerLat, polygon.rightLowerLon]];
-    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(popuptext);
+    L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map);
+    // L.rectangle(bounds, {color: "#ff7800", weight: 1}).addTo(map).bindPopup(popuptext);
     // zoom the map to the rectangle bounds
     map.fitBounds(bounds);
 
 </script>
 
 <br>
-<button style="background-color: lightyellow" onclick="window.location.href = '/raksform';">Back to RAKS form</button>
 
+    <form action="#" th:action="@{/}" th:object="${rakscode}" method="get">
+        <p style="font-weight: bold;">Select RAKS code:</p>
+        <select style="margin-top:-10px;" th:field="*{raksCode}">
+            <option th:each="item : ${raksCodeList}"
+                    th:value="${item.id}"
+                    th:text="${item.raksCode}"></option>
+        </select>
+        <p style="font-weight: bold;"></p><br>
+        <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action">View</button>
+<!--        <button style="margin-top:-25px; background-color: hotpink" type="submit" name="action" value="view_on_map">View on map</button>-->
+<!--        <button style="margin-top:-25px; background-color: orange" type="submit" name="action" value="download">Download</button>-->
+<!--        <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="upload">Upload</button>-->
+        <br>
+    </form>
 </body>
 </html>
