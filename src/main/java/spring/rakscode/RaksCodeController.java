@@ -54,6 +54,11 @@ public class RaksCodeController {
 
         if (raksCode.getId() != 0){
 
+            Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+            if (cdrFileSet.size() == 0) {
+                return "rakscode/messagenoproject";
+            }
+
             Polygon polygonFromDatabase = getPolygonById(raksCode.getPolygonId());
             Polygon polygon = new Polygon();
             polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
@@ -61,7 +66,11 @@ public class RaksCodeController {
             polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
             polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
 
+            PolygonText popupText = createPopupText(raksCode, cdrFileSet);
+
             model.addAttribute("polygon", polygon);
+            model.addAttribute("cdrFiles", cdrFileSet);
+            model.addAttribute("popuptext", popupText);
         }
 
         model.addAttribute("rakscode", raksCode);
@@ -69,6 +78,30 @@ public class RaksCodeController {
 
         return "rakscode/mapranges";
     }
+
+
+    public PolygonText createPopupText (RaksCode raksCode, Set<CdrFile> cdrFileSet){
+        StringBuilder firstLineForPolygonPopup = new StringBuilder();
+        firstLineForPolygonPopup.append("RAKS code name: ");
+        firstLineForPolygonPopup.append("[");
+        firstLineForPolygonPopup.append(getRaksCodeById(raksCode.getId()).getRaksCode());
+        firstLineForPolygonPopup.append("] ");
+
+        StringBuilder secondLineForPolygonPopup = new StringBuilder();
+        secondLineForPolygonPopup.append("Component files: ");
+        for(CdrFile cdrFile : cdrFileSet) {
+            secondLineForPolygonPopup.append("[");
+            secondLineForPolygonPopup.append(cdrFile.getName());
+            secondLineForPolygonPopup.append("] ");
+        }
+
+        PolygonText polygonText = new PolygonText();
+        polygonText.setRaksCodeName(firstLineForPolygonPopup.toString());
+        polygonText.setComponentFilesNames(secondLineForPolygonPopup.toString());
+
+        return polygonText;
+    }
+
 
 
 //    @RequestMapping(value = "/raksform", method = RequestMethod.GET)
@@ -84,55 +117,57 @@ public class RaksCodeController {
 //    @@@@ mappings for viewing files in table form and on a map @@@@
 //    -------------------------------------------------------------------
 
-    @RequestMapping(value = "/givefiles", params="action=view")
-    public ModelAndView viewFiles(RaksCode raksCode) {
-        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
-        if (cdrFileSet.size() == 0) {
-            return new ModelAndView("redirect:/message/noproject");
-        }
-        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
-    }
+//    @RequestMapping(value = "/givefiles", params="action=view")
+//    public ModelAndView viewFiles(RaksCode raksCode) {
+//        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+//        if (cdrFileSet.size() == 0) {
+//            return new ModelAndView("redirect:/message/noproject");
+//        }
+//        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
+//    }
 
 
-    @RequestMapping(value = "/givefiles", params="action=view_on_map")
-    public ModelAndView viewRangesOnMap(RaksCode raksCode, Model model) {
-        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
-        if (cdrFileSet.size() == 0) {
-            return new ModelAndView("redirect:/message/noproject");
-        }
 
-        RaksCode raksCodeFromDatabase = getRaksCodeById(raksCode.getId());
-        Polygon polygonFromDatabase = getPolygonById(raksCodeFromDatabase.getPolygonId());
 
-        StringBuilder firstLineForPolygonPopup = new StringBuilder();
-        firstLineForPolygonPopup.append("RAKS code name: ");
-        firstLineForPolygonPopup.append("[");
-        firstLineForPolygonPopup.append(raksCodeFromDatabase.getRaksCode());
-        firstLineForPolygonPopup.append("] ");
-
-        StringBuilder secondLineForPolygonPopup = new StringBuilder();
-        secondLineForPolygonPopup.append("Component files: ");
-        for(CdrFile cdrFile : cdrFileSet) {
-            secondLineForPolygonPopup.append("[");
-            secondLineForPolygonPopup.append(cdrFile.getName());
-            secondLineForPolygonPopup.append("] ");
-        }
-
-        Polygon polygon = new Polygon();
-        polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
-        polygon.setLeftUpperLon(polygonFromDatabase.getLeftUpperLon());
-        polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
-        polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
-
-        PolygonText text = new PolygonText();
-        text.setRaksCodeName(firstLineForPolygonPopup.toString());
-        text.setComponentFilesNames(secondLineForPolygonPopup.toString());
-
-        model.addAttribute("polygon", polygon);
-        model.addAttribute("text", text);
-
-        return new ModelAndView("rakscode/mapranges");
-    }
+//    @RequestMapping(value = "/givefiles", params="action=view_on_map")
+//    public ModelAndView viewRangesOnMap(RaksCode raksCode, Model model) {
+//        Set<CdrFile> cdrFileSet = raksCode.getCdrFileSet();
+//        if (cdrFileSet.size() == 0) {
+//            return new ModelAndView("redirect:/message/noproject");
+//        }
+//
+//        RaksCode raksCodeFromDatabase = getRaksCodeById(raksCode.getId());
+//        Polygon polygonFromDatabase = getPolygonById(raksCodeFromDatabase.getPolygonId());
+//
+//        StringBuilder firstLineForPolygonPopup = new StringBuilder();
+//        firstLineForPolygonPopup.append("RAKS code name: ");
+//        firstLineForPolygonPopup.append("[");
+//        firstLineForPolygonPopup.append(raksCodeFromDatabase.getRaksCode());
+//        firstLineForPolygonPopup.append("] ");
+//
+//        StringBuilder secondLineForPolygonPopup = new StringBuilder();
+//        secondLineForPolygonPopup.append("Component files: ");
+//        for(CdrFile cdrFile : cdrFileSet) {
+//            secondLineForPolygonPopup.append("[");
+//            secondLineForPolygonPopup.append(cdrFile.getName());
+//            secondLineForPolygonPopup.append("] ");
+//        }
+//
+//        Polygon polygon = new Polygon();
+//        polygon.setLeftUpperLat(polygonFromDatabase.getLeftUpperLat());
+//        polygon.setLeftUpperLon(polygonFromDatabase.getLeftUpperLon());
+//        polygon.setRightLowerLat(polygonFromDatabase.getRightLowerLat());
+//        polygon.setRightLowerLon(polygonFromDatabase.getRightLowerLon());
+//
+//        PolygonText text = new PolygonText();
+//        text.setRaksCodeName(firstLineForPolygonPopup.toString());
+//        text.setComponentFilesNames(secondLineForPolygonPopup.toString());
+//
+//        model.addAttribute("polygon", polygon);
+//        model.addAttribute("text", text);
+//
+//        return new ModelAndView("rakscode/mapranges");
+//    }
 
 
 //    -------------------------------------------------------------------
