@@ -1,5 +1,6 @@
 package spring.rakscode;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
@@ -18,11 +19,13 @@ public class RaksCodeController {
     private ExcelParserImpl excelParser;
     private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriter;
+    private Set<RaksCode> raksCodeSet;
 
     public RaksCodeController() {
         excelParser = new ExcelParserImpl();
         fileDownloader = new FileDownloaderImpl();
         excelWriter = new ExcelWriterImpl();
+        raksCodeSet = excelParser.getSetOfRaksCodes();
     }
 
     @RequestMapping("/")
@@ -31,8 +34,12 @@ public class RaksCodeController {
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
-    public ModelAndView showform(Model model) {
-        return new ModelAndView("rakscode/raksform","rakscode", new RaksCode());
+    public String showform(Model model) {
+
+        model.addAttribute("raksCode", new RaksCode());
+        model.addAttribute("raksCodeSet", raksCodeSet);
+
+        return "rakscode/raksform";
     }
 
 

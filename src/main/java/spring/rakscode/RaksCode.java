@@ -16,4 +16,8 @@ public class RaksCode {
 
     public RaksCode() {
     }
+
+    public RaksCode(String raksCode) {
+        this.raksCode = raksCode;
+    }
 }

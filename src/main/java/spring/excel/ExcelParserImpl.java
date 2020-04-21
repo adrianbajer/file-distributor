@@ -12,6 +12,31 @@ import java.util.*;
 
 public class ExcelParserImpl implements ExcelParser{
 
+    private final String PATH_NAME = "C:\\fd\\Baza archiwum AB.xls";
+//    private final String PATH_NAME = "src\\main\\resources\\excelfiles\\excel example file.xls";
+
+    public ExcelParserImpl() {
+    }
+
+    public String getExcelFileData() {
+        Workbook workbook = null;
+        FileInputStream file = null;
+
+        try {
+            file = new FileInputStream(new File(PATH_NAME));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            workbook = new HSSFWorkbook(file);
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return workbook.getSheetAt(0).getSheetName();
+    }
 
     @Override
     public Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode) {
@@ -25,7 +50,7 @@ public class ExcelParserImpl implements ExcelParser{
 
 
         try {
-            file = new FileInputStream(new File("src\\main\\resources\\excelfiles\\excel example file.xls"));
+            file = new FileInputStream(new File(PATH_NAME));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -92,5 +117,52 @@ public class ExcelParserImpl implements ExcelParser{
         }
 
         return cdrFilesSet;
+    }
+
+
+
+    public Set<RaksCode> getSetOfRaksCodes() {
+        Workbook workbook = null;
+        FileInputStream file = null;
+
+        Set <RaksCode> raksCodeSet = new HashSet<>();
+
+
+        try {
+            file = new FileInputStream(new File(PATH_NAME));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int i = 0;
+        try {
+
+            // @@@@@@@@@@ XSSFWorkbook for xlsx files, HSSFWorkbook for xls files @@@@@@@@@@@@@@@
+//            workbook = new XSSFWorkbook(file);
+            workbook = new HSSFWorkbook(file);
+
+            Sheet publications = workbook.getSheetAt(0);
+
+
+            for(Row row : publications) {
+                i++;
+                // first condition skips 3 first rows, which contains headings
+                if (row.getRowNum() > 2) {
+                    if (row.getCell(0) != null) {
+                        raksCodeSet.add(new RaksCode(row.getCell(0).toString()));
+                    }
+                }
+            }
+
+            file.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        System.out.println("Pętla przeszła tyle razy: " + i);
+//        System.out.println("Rozmiar zbioru raksów: " + raksCodeSet.size());
+
+        return raksCodeSet;
     }
 }

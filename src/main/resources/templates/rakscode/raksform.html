@@ -9,10 +9,14 @@
 <div class="container">
     <h2>RAKS code form</h2>
     <div>
-        <form action="#" th:action="@{/givefiles}" th:object="${rakscode}" method="post">
-            <p style="font-weight: bold;">Enter RAKS code of your project.<br>
-            For testing purposes enter: Akwitania._map_LAM9_FR or Albania..._map_LAM9_EN</p>
-            <input type="text" th:field="*{raksCode}" placeholder="RAKS code"><br><br>
+        <form action="#" th:action="@{/givefiles}" th:object="${raksCode}" method="post">
+
+            <p style="font-weight: bold;">Select RAKS code:</p>
+            <select style="margin-top:-10px;" th:field="*{raksCode}">
+                <option th:each="item : ${raksCodeSet}"
+                        th:value="${item.raksCode}"
+                        th:text="${item.raksCode}"></option>
+            </select>
 
             <p style="font-weight: bold;">Select your name: &ensp;
             <br><br>
@@ -32,6 +36,8 @@
             <button style="margin-top:-25px; background-color: lightyellow" type="submit" name="action" value="view">View</button>
         </form>
         <hr>
+        <br>
+        <button style="background-color: gray" onclick="window.location.href = '/shutdown';">Shutdown the application</button>
     </div>
 </div>
 
