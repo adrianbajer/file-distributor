@@ -11,7 +11,22 @@
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
 
-    <style>#mapid { height: 500px; }</style>
+    <style>
+        #mapid { height: 500px; }
+
+        .column {
+            float: left;
+        }
+
+        .left {
+            width: 35%;
+        }
+
+        .right {
+            width: 65%;
+        }
+
+    </style>
 
 
 </head>
@@ -44,45 +59,48 @@
 <hr>
 
 <!---RAKS code selecting form ----------------------------------------------------------------------------------------->
-
-    <form action="#" th:action="@{/}" th:object="${rakscode}" method="get">
-        <p style="font-weight: bold;">Select RAKS code:</p>
-        <select style="margin-top:-10px;" th:field="*{raksCode}">
-            <option th:each="item : ${raksCodeList}"
-                    th:value="${item.id}"
-                    th:text="${item.raksCode}"></option>
-        </select>
-        <br>
-        <br>
-        <button style="margin-top:-25px; background-color: yellow" type="submit" name="action">View</button>
-<!--        <button style="margin-top:-25px; background-color: hotpink" type="submit" name="action" value="view_on_map">View on map</button>-->
-<!--        <button style="margin-top:-25px; background-color: orange" type="submit" name="action" value="download">Download</button>-->
-<!--        <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="upload">Upload</button>-->
-        <br>
-    </form>
-<br>
-<hr>
+    <div class="row">
+        <div class="column left">
+        <form action="#" th:action="@{/}" th:object="${rakscode}" method="get">
+            <p style="font-weight: bold;">Select RAKS code:</p>
+            <select style="margin-top:-10px;" th:field="*{raksCode}">
+                <option th:each="item : ${raksCodeList}"
+                        th:value="${item.id}"
+                        th:text="${item.raksCode}"></option>
+            </select>
+            <br>
+            <br>
+            <button style="margin-top:-25px; background-color: yellow" type="submit" name="action">View</button>
+    <!--        <button style="margin-top:-25px; background-color: hotpink" type="submit" name="action" value="view_on_map">View on map</button>-->
+    <!--        <button style="margin-top:-25px; background-color: orange" type="submit" name="action" value="download">Download</button>-->
+    <!--        <button style="margin-top:-25px; background-color: yellow" type="submit" name="action" value="upload">Upload</button>-->
+            <br>
+        </form>
+    <br>
+    </div>
 
 <!---table with component files of the RAKS code----------------------------------------------------------------------------------------->
-
-    <p style="font-weight: bold;">Selected RAKS code consists of the following files:</p>
-    <table>
-        <thead>
-        <tr>
-            <th style="text-align: left;">File name</th>
-            <th style="text-align: left; padding:0 15px 0 15px;">Employee</th>
-            <th style="text-align: left; padding:0 15px 0 15px;">Region</th>
-            <th style="text-align: left; padding:0 15px 0 15px;">Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr data-th-each="cdrFile : ${cdrFiles}">
-            <td th:text="${cdrFile.name}"></td>
-            <td style="padding:0 15px 0 15px;" th:text="${cdrFile.place}"></td>
-            <td style="padding:0 15px 0 15px;" th:text="${cdrFile.region}"></td>
-            <td style="padding:0 15px 0 15px;" th:text="${cdrFile.type}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="column right">
+        <p>Selected RAKS code consists of the following files:</p>
+        <table style="background-color: lightblue">
+            <thead>
+            <tr>
+                <th style="text-align: left;">File name</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Employee</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Region</th>
+                <th style="text-align: left; padding:0 15px 0 15px;">Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-th-each="cdrFile : ${cdrFiles}">
+                <td th:text="${cdrFile.name}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.place}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.region}"></td>
+                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.type}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
 </html>
