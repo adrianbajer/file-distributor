@@ -38,6 +38,8 @@ public class ExcelParserImpl implements ExcelParser{
         return workbook.getSheetAt(0).getSheetName();
     }
 
+//-------------------------------------------------------------------------
+
     @Override
     public Set<CdrFile> getSetOfCdrFiles(RaksCode raksCode) {
         Workbook workbook = null;
@@ -67,48 +69,17 @@ public class ExcelParserImpl implements ExcelParser{
             Sheet actualisationAreas = workbook.getSheetAt(2);
 
 
-//            @@@@@@@@@@@@@ This loop gets names of "actualisation areas" from "publications" sheet,
-//            which has RaksCode equal to RaksCode given by user @@@@@@@@@@@@@
-
             for(Row row : publications) {
                 // first condition skips 3 first rows, which contains headings
-                if (row.getRowNum() > 2) {
-                    if (row.getCell(0).toString().equals(raksCodeName)) {
-                        actualisationAreasList.add(row.getCell(11).toString());
-                    }
-                }
-            }
-
-//         @@@@@@@@@@@@@ This loop creates instances of CdrFile class and sets their attributes.
-//         Attributes are taken from "actualisationAreas" sheet, basing on "actualisationAreasList" values,
-//         which are primary key in that sheet. Set is used to get unique instances of CdrFile. @@@@@@@@@@@@@
-            for(Row row : actualisationAreas) {
-                if (row.getRowNum() > 1) {
-                    String cellValue = row.getCell(0).getStringCellValue();
-                    for(String actualisationArea : actualisationAreasList) {
-                        if(cellValue.equals(actualisationArea)) {
-                            cdrFilesSet.add(new CdrFile(row.getCell(1).toString(),"",
-                                    row.getCell(15).toString(),row.getCell(16).toString()));
-                            break;
+                if (row.getRowNum() > 3) {
+                    if(row.getCell(0) != null){
+                        if (row.getCell(0).toString().equals(raksCodeName)) {
+                            cdrFilesSet.add(new CdrFile(row.getCell(20).getRichStringCellValue().toString(),row.getCell(23).getRichStringCellValue().toString(),
+                                    "",""));
                         }
                     }
                 }
             }
-
-//            @@@@@@@@@@@@ This loop sets place attribute in CdrFile objects @@@@@@@@@@@@@
-
-            for(Row row : cdrFiles) {
-                if (row.getRowNum() > 1) {
-                    String cellValue = row.getCell(0).getStringCellValue();
-                    for(CdrFile cdrFile : cdrFilesSet) {
-                        if(cellValue.equals(cdrFile.getName())) {
-                            cdrFile.setPlace(row.getCell(3).toString());
-                            break;
-                        }
-                    }
-                }
-            }
-
 
             file.close();
 
@@ -119,7 +90,7 @@ public class ExcelParserImpl implements ExcelParser{
         return cdrFilesSet;
     }
 
-
+//-------------------------------------------------------------------------
 
     public Set<RaksCode> getSetOfRaksCodes() {
         Workbook workbook = null;
@@ -134,7 +105,6 @@ public class ExcelParserImpl implements ExcelParser{
             e.printStackTrace();
         }
 
-        int i = 0;
         try {
 
             // @@@@@@@@@@ XSSFWorkbook for xlsx files, HSSFWorkbook for xls files @@@@@@@@@@@@@@@
@@ -145,7 +115,6 @@ public class ExcelParserImpl implements ExcelParser{
 
 
             for(Row row : publications) {
-                i++;
                 // first condition skips 3 first rows, which contains headings
                 if (row.getRowNum() > 2) {
                     if (row.getCell(0) != null) {
@@ -159,9 +128,6 @@ public class ExcelParserImpl implements ExcelParser{
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-//        System.out.println("Pętla przeszła tyle razy: " + i);
-//        System.out.println("Rozmiar zbioru raksów: " + raksCodeSet.size());
 
         return raksCodeSet;
     }

@@ -29,8 +29,12 @@ public class RaksCodeController {
     }
 
     @RequestMapping("/")
-    public String indexGet() {
-        return "rakscode/index";
+    public String showFormWhenStarting(Model model) {
+
+        model.addAttribute("raksCode", new RaksCode());
+        model.addAttribute("raksCodeSet", raksCodeSet);
+
+        return "rakscode/raksform";
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
@@ -42,7 +46,6 @@ public class RaksCodeController {
         return "rakscode/raksform";
     }
 
-
     @RequestMapping(value = "/givefiles", params="action=view")
     public ModelAndView viewFiles(RaksCode raksCode) {
 
@@ -53,40 +56,38 @@ public class RaksCodeController {
         return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
     }
 
-
-    @RequestMapping(value = "/givefiles", params="action=download")
-    public ModelAndView downloadFiles(RaksCode raksCode) {
-
-        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
-        if (cdrFileSet.size() == 0) {
-            return new ModelAndView("redirect:/message/noproject");
-        }
-
-//        @@@@@@ Files which are in other place than archive, can't be downloaded.
-//        That's why application denies downloading them. @@@@@@
-        for(CdrFile cdrFile : cdrFileSet) {
-            if (!cdrFile.getPlace().equals("archive")) {
-            return new ModelAndView("redirect:/message/failed");
-            }
-        }
-
-//        @@@@@@ JobType.PUBLICATION means that files won't be modified.
-//        That's why application downloads files and doesn't make any changes in excel database. @@@@@@
-        if (raksCode.getJobType()==JobType.PUBLICATION){
-            for(CdrFile cdrFile : cdrFileSet) {
-                fileDownloader.copyFile(cdrFile);
-            }
-            return new ModelAndView("redirect:/message/ok");
-        } else {
-            for(CdrFile cdrFile : cdrFileSet) {
-                fileDownloader.copyFile(cdrFile);
-            }
-        }
-        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
-        return new ModelAndView("redirect:/message/saved");
-    }
-
-
+//
+//    @RequestMapping(value = "/givefiles", params="action=download")
+//    public ModelAndView downloadFiles(RaksCode raksCode) {
+//
+//        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+//        if (cdrFileSet.size() == 0) {
+//            return new ModelAndView("redirect:/message/noproject");
+//        }
+//
+////        @@@@@@ Files which are in other place than archive, can't be downloaded.
+////        That's why application denies downloading them. @@@@@@
+//        for(CdrFile cdrFile : cdrFileSet) {
+//            if (!cdrFile.getPlace().equals("archive")) {
+//            return new ModelAndView("redirect:/message/failed");
+//            }
+//        }
+//
+////        @@@@@@ JobType.PUBLICATION means that files won't be modified.
+////        That's why application downloads files and doesn't make any changes in excel database. @@@@@@
+//        if (raksCode.getJobType()==JobType.PUBLICATION){
+//            for(CdrFile cdrFile : cdrFileSet) {
+//                fileDownloader.copyFile(cdrFile);
+//            }
+//            return new ModelAndView("redirect:/message/ok");
+//        } else {
+//            for(CdrFile cdrFile : cdrFileSet) {
+//                fileDownloader.copyFile(cdrFile);
+//            }
+//        }
+//        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
+//        return new ModelAndView("redirect:/message/saved");
+//    }
 
     @RequestMapping("/message/failed")
     public String messageFailed() {
@@ -108,29 +109,4 @@ public class RaksCodeController {
         return "rakscode/messagenoproject";
     }
 
-//    Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
-//        for(CdrFile cdrFile : cdrFileSet) {
-//            if (raksCode.getJobType()==JobType.PUBLICATION){
-//                fileDownloader.copyFile(cdrFile);
-//                return new ModelAndView("redirect:/raksform");
-//            }
-//            else {
-//                if (!cdrFile.getPlace().equals("archive")){
-//                    return new ModelAndView("redirect:/message");
-//                }
-//            }
-//        }
-//        excelWriter.saveChangesToExcelFile(cdrFileSet, raksCode);
-//        return new ModelAndView("redirect:/raksform");
-
-//    @RequestMapping(value = "/givefile")
-//    public ModelAndView downloadChosenFile(String cdrFile_name, String cdrFile_place, String cdrFile_region, String cdrFile_type) {
-//        CdrFile cdrFile = new CdrFile(cdrFile_name, cdrFile_place, cdrFile_region, cdrFile_type);
-//        fileDownloader.copyFile(cdrFile);
-//
-//        Set<CdrFile> cdrFiles = new HashSet<>();
-//        cdrFiles.add(cdrFile);
-//
-//        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFiles);
-//    }
 }
