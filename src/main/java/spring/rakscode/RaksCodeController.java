@@ -38,23 +38,62 @@ public class RaksCodeController {
     }
 
     @RequestMapping(value = "/raksform", method = RequestMethod.GET)
-    public String showform(Model model) {
+    public String showComponentFiles(RaksCode raksCode, Model model) {
 
+        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+        if (cdrFileSet.size() == 0) {
+            return "rakscode/messagenoproject";
+        }
+
+        model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
         model.addAttribute("raksCodeSet", raksCodeSet);
 
         return "rakscode/raksform";
     }
 
-    @RequestMapping(value = "/givefiles", params="action=view")
-    public ModelAndView viewFiles(RaksCode raksCode) {
+
+    @RequestMapping(value = "/raksform", params="action=publication")
+    public String copyFilesForPublication(RaksCode raksCode, Model model) {
 
         Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
         if (cdrFileSet.size() == 0) {
-            return new ModelAndView("redirect:/message/noproject");
+            return "rakscode/messagenoproject";
         }
-        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
+
+        model.addAttribute("cdrFiles", cdrFileSet);
+        model.addAttribute("raksCode", new RaksCode());
+        model.addAttribute("raksCodeSet", raksCodeSet);
+
+        return "rakscode/raksform";
     }
+
+
+    @RequestMapping(value = "/raksform", params="action=updating")
+    public String copyFilesForUpdating(RaksCode raksCode, Model model) {
+
+        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+        if (cdrFileSet.size() == 0) {
+            return "rakscode/messagenoproject";
+        }
+
+        model.addAttribute("cdrFiles", cdrFileSet);
+        model.addAttribute("raksCode", new RaksCode());
+        model.addAttribute("raksCodeSet", raksCodeSet);
+
+        return "rakscode/raksform";
+    }
+
+
+//    @RequestMapping(value = "/givefiles", params="action=view")
+//    public ModelAndView viewFiles(RaksCode raksCode) {
+//
+//        Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
+//        if (cdrFileSet.size() == 0) {
+//            return new ModelAndView("redirect:/message/noproject");
+//        }
+//        return new ModelAndView("rakscode/viewfiles", "cdrFiles", cdrFileSet);
+//    }
 
 //
 //    @RequestMapping(value = "/givefiles", params="action=download")
