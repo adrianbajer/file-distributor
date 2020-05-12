@@ -10,6 +10,7 @@ public class CdrFile {
     private String place;
     private String region;
     private String type;
+    private String path;
 
     public CdrFile() {
     }

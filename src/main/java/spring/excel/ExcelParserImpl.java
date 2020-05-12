@@ -75,7 +75,7 @@ public class ExcelParserImpl implements ExcelParser{
                     if(row.getCell(0) != null){
                         if (row.getCell(0).toString().equals(raksCodeName)) {
                             cdrFilesSet.add(new CdrFile(row.getCell(20).getRichStringCellValue().toString(),row.getCell(23).getRichStringCellValue().toString(),
-                                    "",""));
+                                    "","",row.getCell(25).getRichStringCellValue().toString()));
                         }
                     }
                 }
@@ -92,7 +92,7 @@ public class ExcelParserImpl implements ExcelParser{
 
 //-------------------------------------------------------------------------
 
-    public Set<RaksCode> getSetOfRaksCodes() {
+    public List<RaksCode> getListOfRaksCodes() {
         Workbook workbook = null;
         FileInputStream file = null;
 
@@ -129,6 +129,9 @@ public class ExcelParserImpl implements ExcelParser{
             e.printStackTrace();
         }
 
-        return raksCodeSet;
+        List<RaksCode> raksCodeList = new ArrayList<>(raksCodeSet);
+        Collections.sort(raksCodeList);
+
+        return raksCodeList;
     }
 }

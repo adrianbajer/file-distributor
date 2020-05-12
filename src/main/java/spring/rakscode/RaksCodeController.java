@@ -1,16 +1,16 @@
 package spring.rakscode;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
+import spring.cdrfiles.PathCreatorImpl;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -19,20 +19,20 @@ public class RaksCodeController {
     private ExcelParserImpl excelParser;
     private FileDownloaderImpl fileDownloader;
     private ExcelWriterImpl excelWriter;
-    private Set<RaksCode> raksCodeSet;
+    private List<RaksCode> raksCodeList;
 
     public RaksCodeController() {
         excelParser = new ExcelParserImpl();
         fileDownloader = new FileDownloaderImpl();
         excelWriter = new ExcelWriterImpl();
-        raksCodeSet = excelParser.getSetOfRaksCodes();
+        raksCodeList = excelParser.getListOfRaksCodes();
     }
 
     @RequestMapping("/")
     public String showFormWhenStarting(Model model) {
 
         model.addAttribute("raksCode", new RaksCode());
-        model.addAttribute("raksCodeSet", raksCodeSet);
+        model.addAttribute("raksCodeList", raksCodeList);
 
         return "rakscode/raksform";
     }
@@ -47,7 +47,7 @@ public class RaksCodeController {
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
-        model.addAttribute("raksCodeSet", raksCodeSet);
+        model.addAttribute("raksCodeList", raksCodeList);
 
         return "rakscode/raksform";
     }
@@ -63,7 +63,7 @@ public class RaksCodeController {
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
-        model.addAttribute("raksCodeSet", raksCodeSet);
+        model.addAttribute("raksCodeList", raksCodeList);
 
         return "rakscode/raksform";
     }
@@ -79,7 +79,7 @@ public class RaksCodeController {
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
-        model.addAttribute("raksCodeSet", raksCodeSet);
+        model.addAttribute("raksCodeList", raksCodeList);
 
         return "rakscode/raksform";
     }
