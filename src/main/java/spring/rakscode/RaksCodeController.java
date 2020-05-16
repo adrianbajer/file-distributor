@@ -10,6 +10,7 @@ import spring.cdrfiles.PathCreatorImpl;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -44,6 +45,23 @@ public class RaksCodeController {
         if (cdrFileSet.size() == 0) {
             return "rakscode/messagenoproject";
         }
+
+//     @@@@@@@@@@@@@@@   do testowania    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        PathCreatorImpl pathCreator = new PathCreatorImpl();
+        List<String> listOfFilesAndDirectories = new ArrayList<>();
+
+        for(CdrFile cdrFile : cdrFileSet){
+            listOfFilesAndDirectories = fileDownloader.getListOfFilesAndDirectories(pathCreator.createPath(cdrFile));
+        }
+//        listOfFilesAndDirectories.forEach(System.out::println);
+
+        String latestVDirectory = fileDownloader.findLatestVDirectory(listOfFilesAndDirectories);
+
+        System.out.println("Katalog z najnowszą v to: " + latestVDirectory);
+
+
+//     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
