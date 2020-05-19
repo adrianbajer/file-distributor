@@ -14,5 +14,10 @@ public class PathCreatorImpl implements PathCreator{
         return sb.toString();
     }
 
+    @Override
+    public String createPathToVDir(String latestVDirectory) {
+        return null;
+    }
+
 
 }

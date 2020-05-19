@@ -7,7 +7,11 @@ public interface FileDownloader {
 
     void copyFile(CdrFile cdrFile);
 
-    List<String> getListOfFilesAndDirectories(String mainDirPath);
+    void copyFile(String pathToFile, String mainDirPath);
+
+    List<String> getListOfPathsToFilesAndDirs(String mainDirPath);
+
+    List<String> getListOfPathsToFilesOrDirs(String mainDirPath, int fileOrDir);
 
     String findLatestVDirectory(List<String> listOfvDirectories);
 

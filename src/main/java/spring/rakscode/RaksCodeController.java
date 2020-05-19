@@ -50,15 +50,35 @@ public class RaksCodeController {
 
         PathCreatorImpl pathCreator = new PathCreatorImpl();
         List<String> listOfFilesAndDirectories = new ArrayList<>();
+        List<String> listOfFilesInLatestVDir = new ArrayList<>();
+        List<String> listOfDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfFilesAndDirsInLatestVDir = new ArrayList<>();
 
         for(CdrFile cdrFile : cdrFileSet){
-            listOfFilesAndDirectories = fileDownloader.getListOfFilesAndDirectories(pathCreator.createPath(cdrFile));
+            listOfFilesAndDirectories = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
         }
 //        listOfFilesAndDirectories.forEach(System.out::println);
+//        System.out.println("___________________________________");
 
         String latestVDirectory = fileDownloader.findLatestVDirectory(listOfFilesAndDirectories);
 
-        System.out.println("Katalog z najnowszą v to: " + latestVDirectory);
+        listOfFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 1);
+        listOfDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 2);
+        listOfFilesAndDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 3);
+
+        listOfFilesInLatestVDir.forEach(System.out::println);
+        System.out.println("___________________________________");
+        listOfDirsInLatestVDir.forEach(System.out::println);
+        System.out.println("___________________________________");
+        listOfFilesAndDirsInLatestVDir.forEach(System.out::println);
+        System.out.println("___________________________________");
+
+        for(String pathToFile : listOfFilesInLatestVDir) {
+            fileDownloader.copyFile(pathToFile, latestVDirectory);
+        }
+
+
+//        System.out.println("Katalog z najnowszą v to: " + latestVDirectory);
 
 
 //     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

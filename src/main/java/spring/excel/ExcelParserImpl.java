@@ -131,6 +131,8 @@ public class ExcelParserImpl implements ExcelParser{
 
         List<RaksCode> raksCodeList = new ArrayList<>(raksCodeSet);
         Collections.sort(raksCodeList);
+        if (raksCodeList.get(0).getRaksCode().equals(""))
+        raksCodeList.remove(0);
 
         return raksCodeList;
     }
