@@ -49,36 +49,46 @@ public class RaksCodeController {
 //     @@@@@@@@@@@@@@@   do testowania    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         PathCreatorImpl pathCreator = new PathCreatorImpl();
-        List<String> listOfFilesAndDirectories = new ArrayList<>();
-        List<String> listOfFilesInLatestVDir = new ArrayList<>();
-        List<String> listOfDirsInLatestVDir = new ArrayList<>();
-        List<String> listOfFilesAndDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToFilesAndDirectoriesInMainDir = new ArrayList<>();
+        List<String> listOfPathsToFilesInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToFilesAndDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToXyzAndKorektaXls = new ArrayList<>();
+
+
+        //consider case with several source cdrFiles
 
         for(CdrFile cdrFile : cdrFileSet){
-            listOfFilesAndDirectories = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
+            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
+            listOfPathsToXyzAndKorektaXls = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"(XYZ|korekta)");
         }
-//        listOfFilesAndDirectories.forEach(System.out::println);
+
+
+        String latestVDirPath = fileDownloader.findPathToLatestVDirectory(listOfPathsToFilesAndDirectoriesInMainDir);
+
+        listOfPathsToXyzAndKorektaXls.forEach(System.out::println);
+
+
+
+        listOfPathsToFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 1);
+        listOfPathsToDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 2);
+        listOfPathsToFilesAndDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 3);
+
+//        listOfPathsToFilesInLatestVDir.forEach(System.out::println);
+//        System.out.println("___________________________________");
+//        listOfPathsToDirsInLatestVDir.forEach(System.out::println);
+//        System.out.println("___________________________________");
+//        listOfPathsToFilesAndDirsInLatestVDir.forEach(System.out::println);
 //        System.out.println("___________________________________");
 
-        String latestVDirectory = fileDownloader.findLatestVDirectory(listOfFilesAndDirectories);
+//        for(String pathToFile : listOfPathsToFilesAndDirectoriesInMainDir) {
+//            fileDownloader.copyFile(pathToFile, latestVDirPath);
+//        }
+//
+//        for(String pathToFile : listOfPathsToFilesInLatestVDir) {
+//            fileDownloader.copyFile(pathToFile, latestVDirPath);
+//        }
 
-        listOfFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 1);
-        listOfDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 2);
-        listOfFilesAndDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirectory, 3);
-
-        listOfFilesInLatestVDir.forEach(System.out::println);
-        System.out.println("___________________________________");
-        listOfDirsInLatestVDir.forEach(System.out::println);
-        System.out.println("___________________________________");
-        listOfFilesAndDirsInLatestVDir.forEach(System.out::println);
-        System.out.println("___________________________________");
-
-        for(String pathToFile : listOfFilesInLatestVDir) {
-            fileDownloader.copyFile(pathToFile, latestVDirectory);
-        }
-
-
-//        System.out.println("Katalog z najnowszą v to: " + latestVDirectory);
 
 
 //     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@

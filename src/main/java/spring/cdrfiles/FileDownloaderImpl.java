@@ -32,6 +32,8 @@ public class FileDownloaderImpl implements FileDownloader {
     @Override
     public void copyFile(String pathToFile, String mainDirPath) {
         Path srcFile = Paths.get(pathToFile);
+
+        // line below extracts file name in order to create destination path
         String fileName = pathToFile.replace(mainDirPath, "").substring(1);
         Path dstFile = Paths.get("C:\\fd\\result copies\\" + fileName);
 
@@ -54,6 +56,7 @@ public class FileDownloaderImpl implements FileDownloader {
                 .collect(Collectors.toList());
 
 
+        // loop creates paths to files and dirs
         for (int i = 0; i < fileAndDirNamesList.size(); i++){
             fileAndDirNamesList.set(i, mainDirPath + "\\" + fileAndDirNamesList.get(i));
         }
@@ -64,6 +67,8 @@ public class FileDownloaderImpl implements FileDownloader {
 
     @Override
     public List<String> getListOfPathsToFilesOrDirs(String mainDirPath, int fileOrDir) {
+
+        // loops in every case block creates paths to files and dirs
 
         switch (fileOrDir) {
             case 1:
@@ -103,15 +108,27 @@ public class FileDownloaderImpl implements FileDownloader {
 
 
     @Override
-    public String findLatestVDirectory(List<String> listOfAllFilesAndDirectories) {
+    public String findPathToLatestVDirectory(List<String> listOfAllFilesAndDirectories) {
         Pattern pattern = Pattern.compile("v[0-9][0-9]-");
 
         List<String> listOfvDirectories= listOfAllFilesAndDirectories.stream()
                 .filter(pattern.asPredicate())
                 .sorted()
                 .collect(Collectors.toList());
-//        Collections.sort(listOfvDirectories);
 
         return listOfvDirectories.get(listOfvDirectories.size() - 1);
     }
+
+    @Override
+    public List<String> findPathsMatchingRegex(List<String> listOfAllFilesAndDirectories, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+
+        List<String> listOfPaths= listOfAllFilesAndDirectories.stream()
+                .filter(pattern.asPredicate())
+                .sorted()
+                .collect(Collectors.toList());
+
+        return listOfPaths;
+    }
+
 }

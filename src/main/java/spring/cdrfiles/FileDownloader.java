@@ -13,6 +13,8 @@ public interface FileDownloader {
 
     List<String> getListOfPathsToFilesOrDirs(String mainDirPath, int fileOrDir);
 
-    String findLatestVDirectory(List<String> listOfvDirectories);
+    String findPathToLatestVDirectory(List<String> listOfAllFilesAndDirectories);
+
+    List<String> findPathsMatchingRegex(List<String> listOfAllFilesAndDirectories, String regex);
 
 }
