@@ -10,6 +10,7 @@ import spring.cdrfiles.PathCreatorImpl;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,53 +47,6 @@ public class RaksCodeController {
             return "rakscode/messagenoproject";
         }
 
-//     @@@@@@@@@@@@@@@   do testowania    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-        PathCreatorImpl pathCreator = new PathCreatorImpl();
-        List<String> listOfPathsToFilesAndDirectoriesInMainDir = new ArrayList<>();
-        List<String> listOfPathsToFilesInLatestVDir = new ArrayList<>();
-        List<String> listOfPathsToDirsInLatestVDir = new ArrayList<>();
-        List<String> listOfPathsToFilesAndDirsInLatestVDir = new ArrayList<>();
-        List<String> listOfPathsToXyzAndKorektaXls = new ArrayList<>();
-
-
-        //consider case with several source cdrFiles
-
-        for(CdrFile cdrFile : cdrFileSet){
-            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
-            listOfPathsToXyzAndKorektaXls = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"(XYZ|korekta)");
-        }
-
-
-        String latestVDirPath = fileDownloader.findPathToLatestVDirectory(listOfPathsToFilesAndDirectoriesInMainDir);
-
-        listOfPathsToXyzAndKorektaXls.forEach(System.out::println);
-
-
-
-        listOfPathsToFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 1);
-        listOfPathsToDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 2);
-        listOfPathsToFilesAndDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 3);
-
-//        listOfPathsToFilesInLatestVDir.forEach(System.out::println);
-//        System.out.println("___________________________________");
-//        listOfPathsToDirsInLatestVDir.forEach(System.out::println);
-//        System.out.println("___________________________________");
-//        listOfPathsToFilesAndDirsInLatestVDir.forEach(System.out::println);
-//        System.out.println("___________________________________");
-
-//        for(String pathToFile : listOfPathsToFilesAndDirectoriesInMainDir) {
-//            fileDownloader.copyFile(pathToFile, latestVDirPath);
-//        }
-//
-//        for(String pathToFile : listOfPathsToFilesInLatestVDir) {
-//            fileDownloader.copyFile(pathToFile, latestVDirPath);
-//        }
-
-
-
-//     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
         model.addAttribute("raksCodeList", raksCodeList);
@@ -120,10 +74,73 @@ public class RaksCodeController {
     @RequestMapping(value = "/raksform", params="action=updating")
     public String copyFilesForUpdating(RaksCode raksCode, Model model) {
 
+        String latestVDirPath = "";
         Set<CdrFile> cdrFileSet = excelParser.getSetOfCdrFiles(raksCode);
         if (cdrFileSet.size() == 0) {
             return "rakscode/messagenoproject";
         }
+
+        //     @@@@@@@@@@@@@@@   do testowania    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        PathCreatorImpl pathCreator = new PathCreatorImpl();
+        List<String> listOfPathsToFilesAndDirectoriesInMainDir = new ArrayList<>();
+        List<String> listOfPathsToFilesInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToFilesAndDirsInLatestVDir = new ArrayList<>();
+        List<String> listOfPathsToXyz = new ArrayList<>();
+
+
+        for(CdrFile cdrFile : cdrFileSet){
+//            we are in main dir now
+
+            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
+
+//            we are copying "XYZ_korekta_do_wprowadzenia" dir
+            listOfPathsToXyz = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"XYZ");
+
+            for (String pathToDir : listOfPathsToXyz) {
+                fileDownloader.copyDir(pathToDir);
+            }
+
+
+            latestVDirPath = fileDownloader.findPathToLatestVDirectory(listOfPathsToFilesAndDirectoriesInMainDir);
+            listOfPathsToFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 1);
+//            System.out.println(listOfPathsToFilesAndDirectoriesInMainDir);
+//            System.out.println(latestVDirPath);
+//            System.out.println(listOfPathsToFilesInLatestVDir);
+
+            for(String pathToFile : listOfPathsToFilesInLatestVDir) {
+//                we are in latestVDir now and copy all files
+                fileDownloader.copyFile(pathToFile, latestVDirPath);
+            }
+
+        }
+
+//        listOfPathsToXyzAndKorektaXls.forEach(System.out::println);
+
+
+//      1- files, 2 -dirs, 3 -files and dirs
+//        listOfPathsToFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 1);
+//        listOfPathsToDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 2);
+//        listOfPathsToFilesAndDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 3);
+
+//        listOfPathsToFilesInLatestVDir.forEach(System.out::println);
+//        System.out.println("___________________________________");
+//        listOfPathsToDirsInLatestVDir.forEach(System.out::println);
+//        System.out.println("___________________________________");
+//        listOfPathsToFilesAndDirsInLatestVDir.forEach(System.out::println);
+//        System.out.println("___________________________________");
+
+//        for(String pathToFile : listOfPathsToFilesAndDirectoriesInMainDir) {
+//            fileDownloader.copyFile(pathToFile, latestVDirPath);
+//        }
+//
+
+
+
+
+//     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());

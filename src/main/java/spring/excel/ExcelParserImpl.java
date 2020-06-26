@@ -12,6 +12,7 @@ import java.util.*;
 
 public class ExcelParserImpl implements ExcelParser{
 
+//    private final String PATH_NAME = "\\\\archiwum\\baza archiwum\\Baza archiwum AB.xls";
     private final String PATH_NAME = "C:\\fd\\Baza archiwum AB.xls";
 //    private final String PATH_NAME = "src\\main\\resources\\excelfiles\\excel example file.xls";
 

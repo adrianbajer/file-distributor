@@ -9,6 +9,8 @@ public interface FileDownloader {
 
     void copyFile(String pathToFile, String mainDirPath);
 
+    void copyDir(String pathToDir);
+
     List<String> getListOfPathsToFilesAndDirs(String mainDirPath);
 
     List<String> getListOfPathsToFilesOrDirs(String mainDirPath, int fileOrDir);

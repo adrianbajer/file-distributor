@@ -1,5 +1,7 @@
 package spring.cdrfiles;
 
+
+import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,15 +32,32 @@ public class FileDownloaderImpl implements FileDownloader {
     }
 
     @Override
-    public void copyFile(String pathToFile, String mainDirPath) {
+    public void copyFile(String pathToFile, String latestVDirPath) {
         Path srcFile = Paths.get(pathToFile);
 
         // line below extracts file name in order to create destination path
-        String fileName = pathToFile.replace(mainDirPath, "").substring(1);
+        String fileName = pathToFile.replace(latestVDirPath, "").substring(1);
         Path dstFile = Paths.get("C:\\fd\\result copies\\" + fileName);
 
         try {
             Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void copyDir(String pathToDir) {
+        File srcDir = new File(pathToDir);
+
+//        following code creates separate dirs for dirs with different source
+        String toCreateDstDirName = pathToDir.substring(0, pathToDir.lastIndexOf("\\"));
+        String dstDirName = toCreateDstDirName.substring(toCreateDstDirName.lastIndexOf("\\") + 1);
+        String xyzDirName = pathToDir.substring(pathToDir.lastIndexOf("\\") + 1);
+        File dstDir = new File("C:\\fd\\result copies\\" + dstDirName + "\\" + xyzDirName);
+
+        try {
+            FileUtils.copyDirectory(srcDir, dstDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
