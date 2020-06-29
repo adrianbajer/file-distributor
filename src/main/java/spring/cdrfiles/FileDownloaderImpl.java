@@ -16,12 +16,17 @@ import java.util.stream.Stream;
 public class FileDownloaderImpl implements FileDownloader {
 
     @Override
-    public void copyFile(CdrFile cdrFile) {
+    public void copyFileFromMainDir(String pathToFile) {
 
-        PathCreator pathCreator = new PathCreatorImpl();
+        Path srcFile = Paths.get(pathToFile);
 
-        Path srcFile = Paths.get(pathCreator.createPath(cdrFile));
-        Path dstFile = Paths.get("C:\\fd\\result copies\\" + cdrFile.getName() + ".txt");
+        //        following code creates separate dirs for files from different projects
+        String toCreateDstDirName = pathToFile.substring(0, pathToFile.lastIndexOf("\\"));
+        String dstDirName = toCreateDstDirName.substring(toCreateDstDirName.lastIndexOf("\\") + 1);
+
+        // line below extracts file name in order to create destination path
+        String fileName = pathToFile.substring(pathToFile.lastIndexOf("\\"));
+        Path dstFile = Paths.get("C:\\fd\\result copies\\" + dstDirName + "\\" + fileName);
 
         try {
             Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
@@ -32,12 +37,18 @@ public class FileDownloaderImpl implements FileDownloader {
     }
 
     @Override
-    public void copyFile(String pathToFile, String latestVDirPath) {
+    public void copyFileFromLatestVDir(String pathToFile) {
         Path srcFile = Paths.get(pathToFile);
 
+        //        following code creates separate dirs for files from different projects, in case of v dir we have to
+        //        repeat cutting off last dir name twice
+        String toCreateDstDirName1 = pathToFile.substring(0, pathToFile.lastIndexOf("\\"));
+        String toCreateDstDirName2 = toCreateDstDirName1.substring(0, toCreateDstDirName1.lastIndexOf("\\"));
+        String dstDirName = toCreateDstDirName2.substring(toCreateDstDirName2.lastIndexOf("\\") + 1);
+
         // line below extracts file name in order to create destination path
-        String fileName = pathToFile.replace(latestVDirPath, "").substring(1);
-        Path dstFile = Paths.get("C:\\fd\\result copies\\" + fileName);
+        String fileName = pathToFile.substring(pathToFile.lastIndexOf("\\"));
+        Path dstFile = Paths.get("C:\\fd\\result copies\\" + dstDirName + "\\" + fileName);
 
         try {
             Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
@@ -87,7 +98,8 @@ public class FileDownloaderImpl implements FileDownloader {
     @Override
     public List<String> getListOfPathsToFilesOrDirs(String mainDirPath, int fileOrDir) {
 
-        // loops in every case block creates paths to files and dirs
+        // loops in every case block creates paths to files or dirs
+//        possible cases: 1- files, 2 -dirs, 3 -files and dirs
 
         switch (fileOrDir) {
             case 1:
@@ -140,7 +152,7 @@ public class FileDownloaderImpl implements FileDownloader {
 
     @Override
     public List<String> findPathsMatchingRegex(List<String> listOfAllFilesAndDirectories, String regex) {
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
         List<String> listOfPaths= listOfAllFilesAndDirectories.stream()
                 .filter(pattern.asPredicate())

@@ -5,9 +5,10 @@ import java.util.stream.Stream;
 
 public interface FileDownloader {
 
-    void copyFile(CdrFile cdrFile);
+    void copyFileFromMainDir(String pathToFile);
 
-    void copyFile(String pathToFile, String mainDirPath);
+    void copyFileFromLatestVDir(String pathToFile);
+
 
     void copyDir(String pathToDir);
 

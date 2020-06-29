@@ -10,7 +10,6 @@ import spring.cdrfiles.PathCreatorImpl;
 import spring.excel.ExcelParserImpl;
 import spring.excel.ExcelWriterImpl;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -86,8 +85,9 @@ public class RaksCodeController {
         List<String> listOfPathsToFilesAndDirectoriesInMainDir = new ArrayList<>();
         List<String> listOfPathsToFilesInLatestVDir = new ArrayList<>();
         List<String> listOfPathsToDirsInLatestVDir = new ArrayList<>();
-        List<String> listOfPathsToFilesAndDirsInLatestVDir = new ArrayList<>();
-        List<String> listOfPathsToXyz = new ArrayList<>();
+        List<String> listWithPathsToLegendsMetroAndIndexes= new ArrayList<>();
+        List<String> listWithPathToXyz = new ArrayList<>();
+        List<String> listWithPathToKorektaXls = new ArrayList<>();
 
 
         for(CdrFile cdrFile : cdrFileSet){
@@ -96,24 +96,37 @@ public class RaksCodeController {
             listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
 
 //            we are copying "XYZ_korekta_do_wprowadzenia" dir
-            listOfPathsToXyz = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"XYZ");
+            listWithPathToXyz = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"XYZ");
 
-            for (String pathToDir : listOfPathsToXyz) {
+            for (String pathToDir : listWithPathToXyz) {
                 fileDownloader.copyDir(pathToDir);
             }
 
+//            we are copying "korekta.xls" file
+            listWithPathToKorektaXls = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"korekta.xls");
+
+            for (String pathToFile : listWithPathToKorektaXls) {
+                fileDownloader.copyFileFromMainDir(pathToFile);
+            }
 
             latestVDirPath = fileDownloader.findPathToLatestVDirectory(listOfPathsToFilesAndDirectoriesInMainDir);
             listOfPathsToFilesInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 1);
+            listOfPathsToDirsInLatestVDir = fileDownloader.getListOfPathsToFilesOrDirs(latestVDirPath, 2);
 //            System.out.println(listOfPathsToFilesAndDirectoriesInMainDir);
 //            System.out.println(latestVDirPath);
 //            System.out.println(listOfPathsToFilesInLatestVDir);
 
+//            we are in latestVDir now and copy all files
+
             for(String pathToFile : listOfPathsToFilesInLatestVDir) {
-//                we are in latestVDir now and copy all files
-                fileDownloader.copyFile(pathToFile, latestVDirPath);
+                fileDownloader.copyFileFromLatestVDir(pathToFile);
             }
 
+//            we are in latestVDir now and copy dirs matching regex
+            listWithPathsToLegendsMetroAndIndexes = fileDownloader.findPathsMatchingRegex(listOfPathsToDirsInLatestVDir, "legend|metro|indeks");
+            for(String pathToDir : listWithPathsToLegendsMetroAndIndexes) {
+                fileDownloader.copyDir(pathToDir);
+            }
         }
 
 //        listOfPathsToXyzAndKorektaXls.forEach(System.out::println);
