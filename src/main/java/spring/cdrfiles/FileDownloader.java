@@ -9,8 +9,9 @@ public interface FileDownloader {
 
     void copyFileFromLatestVDir(String pathToFile);
 
+    void copyDirFromMainDir(String pathToDir);
 
-    void copyDir(String pathToDir);
+    void copyDirFromLatestVDir(String pathToDir);
 
     List<String> getListOfPathsToFilesAndDirs(String mainDirPath);
 

@@ -2,6 +2,10 @@ package spring.cdrfiles;
 
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,7 +17,18 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
 public class FileDownloaderImpl implements FileDownloader {
+
+    private String resultCopiesDirPath;
+
+    public FileDownloaderImpl() {
+    }
+
+    @Autowired
+    public FileDownloaderImpl(@Qualifier("resultCopiesDirPath") String resultCopiesDirPath) {
+        this.resultCopiesDirPath = resultCopiesDirPath;
+    }
 
     @Override
     public void copyFileFromMainDir(String pathToFile) {
@@ -26,7 +41,7 @@ public class FileDownloaderImpl implements FileDownloader {
 
         // line below extracts file name in order to create destination path
         String fileName = pathToFile.substring(pathToFile.lastIndexOf("\\"));
-        Path dstFile = Paths.get("C:\\fd\\result copies\\" + dstDirName + "\\" + fileName);
+        Path dstFile = Paths.get(resultCopiesDirPath + dstDirName + "\\" + fileName);
 
         try {
             Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
@@ -48,7 +63,7 @@ public class FileDownloaderImpl implements FileDownloader {
 
         // line below extracts file name in order to create destination path
         String fileName = pathToFile.substring(pathToFile.lastIndexOf("\\"));
-        Path dstFile = Paths.get("C:\\fd\\result copies\\" + dstDirName + "\\" + fileName);
+        Path dstFile = Paths.get(resultCopiesDirPath + dstDirName + "\\" + fileName);
 
         try {
             Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
@@ -58,14 +73,33 @@ public class FileDownloaderImpl implements FileDownloader {
     }
 
     @Override
-    public void copyDir(String pathToDir) {
+    public void copyDirFromMainDir(String pathToDir) {
         File srcDir = new File(pathToDir);
 
 //        following code creates separate dirs for dirs with different source
         String toCreateDstDirName = pathToDir.substring(0, pathToDir.lastIndexOf("\\"));
         String dstDirName = toCreateDstDirName.substring(toCreateDstDirName.lastIndexOf("\\") + 1);
-        String xyzDirName = pathToDir.substring(pathToDir.lastIndexOf("\\") + 1);
-        File dstDir = new File("C:\\fd\\result copies\\" + dstDirName + "\\" + xyzDirName);
+        String copiedDirName = pathToDir.substring(pathToDir.lastIndexOf("\\") + 1);
+        File dstDir = new File(resultCopiesDirPath + dstDirName + "\\" + copiedDirName);
+
+        try {
+            FileUtils.copyDirectory(srcDir, dstDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void copyDirFromLatestVDir(String pathToDir) {
+        File srcDir = new File(pathToDir);
+
+//        following code creates separate dirs for dirs with different source, in case of v dir we have to
+//        repeat cutting off last dir name twice
+        String toCreateDstDirName1 = pathToDir.substring(0, pathToDir.lastIndexOf("\\"));
+        String toCreateDstDirName2 = toCreateDstDirName1.substring(0, toCreateDstDirName1.lastIndexOf("\\"));
+        String dstDirName = toCreateDstDirName2.substring(toCreateDstDirName2.lastIndexOf("\\") + 1);
+        String copiedDirName = pathToDir.substring(pathToDir.lastIndexOf("\\") + 1);
+        File dstDir = new File(resultCopiesDirPath + dstDirName + "\\" + copiedDirName);
 
         try {
             FileUtils.copyDirectory(srcDir, dstDir);

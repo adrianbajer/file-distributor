@@ -4,19 +4,26 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
 import java.io.*;
 import java.util.*;
 
+@Component
 public class ExcelParserImpl implements ExcelParser{
 
-//    private final String PATH_NAME = "\\\\archiwum\\baza archiwum\\Baza archiwum AB.xls";
-    private final String PATH_NAME = "C:\\fd\\Baza archiwum AB.xls";
-//    private final String PATH_NAME = "src\\main\\resources\\excelfiles\\excel example file.xls";
+    private String pathName;
 
     public ExcelParserImpl() {
+    }
+
+    @Autowired
+    public ExcelParserImpl(@Qualifier("bazaArchiwumPath") String pathName) {
+        this.pathName = pathName;
     }
 
     public String getExcelFileData() {
@@ -24,7 +31,7 @@ public class ExcelParserImpl implements ExcelParser{
         FileInputStream file = null;
 
         try {
-            file = new FileInputStream(new File(PATH_NAME));
+            file = new FileInputStream(new File(pathName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -53,7 +60,7 @@ public class ExcelParserImpl implements ExcelParser{
 
 
         try {
-            file = new FileInputStream(new File(PATH_NAME));
+            file = new FileInputStream(new File(pathName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -101,7 +108,7 @@ public class ExcelParserImpl implements ExcelParser{
 
 
         try {
-            file = new FileInputStream(new File(PATH_NAME));
+            file = new FileInputStream(new File(pathName));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

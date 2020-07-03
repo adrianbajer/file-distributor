@@ -22,9 +22,9 @@ public class RaksCodeController {
     private ExcelWriterImpl excelWriter;
     private List<RaksCode> raksCodeList;
 
-    public RaksCodeController() {
-        excelParser = new ExcelParserImpl();
-        fileDownloader = new FileDownloaderImpl();
+    public RaksCodeController(ExcelParserImpl excelParser, FileDownloaderImpl fileDownloader) {
+        this.excelParser = excelParser;
+        this.fileDownloader = fileDownloader;
         excelWriter = new ExcelWriterImpl();
         raksCodeList = excelParser.getListOfRaksCodes();
     }
@@ -99,7 +99,7 @@ public class RaksCodeController {
             listWithPathToXyz = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"XYZ");
 
             for (String pathToDir : listWithPathToXyz) {
-                fileDownloader.copyDir(pathToDir);
+                fileDownloader.copyDirFromMainDir(pathToDir);
             }
 
 //            we are copying "korekta.xls" file
@@ -125,7 +125,7 @@ public class RaksCodeController {
 //            we are in latestVDir now and copy dirs matching regex
             listWithPathsToLegendsMetroAndIndexes = fileDownloader.findPathsMatchingRegex(listOfPathsToDirsInLatestVDir, "legend|metro|indeks");
             for(String pathToDir : listWithPathsToLegendsMetroAndIndexes) {
-                fileDownloader.copyDir(pathToDir);
+                fileDownloader.copyDirFromLatestVDir(pathToDir);
             }
         }
 
