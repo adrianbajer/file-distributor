@@ -11,6 +11,7 @@ import spring.cdrfiles.CdrFile;
 import spring.rakscode.RaksCode;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
@@ -72,6 +73,8 @@ public class ExcelParserImpl implements ExcelParser{
 //            workbook = new XSSFWorkbook(file);
             workbook = new HSSFWorkbook(file);
 
+            Date dateOfCdrFile;
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy");
             Sheet publications = workbook.getSheetAt(0);
             Sheet cdrFiles = workbook.getSheetAt(1);
             Sheet actualisationAreas = workbook.getSheetAt(2);
@@ -82,7 +85,11 @@ public class ExcelParserImpl implements ExcelParser{
                 if (row.getRowNum() > 3) {
                     if(row.getCell(0) != null){
                         if (row.getCell(0).toString().equals(raksCodeName)) {
-                            cdrFilesSet.add(new CdrFile(row.getCell(20).getRichStringCellValue().toString(),row.getCell(23).getRichStringCellValue().toString(),
+                            dateOfCdrFile = row.getCell(22).getDateCellValue();
+                            String formattedDateOfCdrFile = formatter.format(dateOfCdrFile);
+
+                            cdrFilesSet.add(new CdrFile(row.getCell(20).getRichStringCellValue().toString(), row.getCell(21).getRichStringCellValue().toString(),
+                                    formattedDateOfCdrFile, row.getCell(23).getRichStringCellValue().toString(),
                                     "","",row.getCell(25).getRichStringCellValue().toString()));
                         }
                     }

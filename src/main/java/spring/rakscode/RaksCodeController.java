@@ -46,6 +46,9 @@ public class RaksCodeController {
             return "rakscode/messagenoproject";
         }
 
+//        raksCodeList.remove(raksCode);
+//        raksCodeList.add(raksCode);
+
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
         model.addAttribute("raksCodeList", raksCodeList);
@@ -93,7 +96,11 @@ public class RaksCodeController {
         for(CdrFile cdrFile : cdrFileSet){
 //            we are in main dir now
 
-            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPath(cdrFile));
+//            for network use
+            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPathForLocalUse(cdrFile));
+
+//            for local use
+//            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(cdrFile.getPath());
 
 //            we are copying "XYZ_korekta_do_wprowadzenia" dir
             listWithPathToXyz = fileDownloader.findPathsMatchingRegex(listOfPathsToFilesAndDirectoriesInMainDir,"XYZ");

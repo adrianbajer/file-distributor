@@ -4,7 +4,7 @@ public class PathCreatorImpl implements PathCreator{
 
 
     @Override
-    public String createPath(CdrFile cdrFile) {
+    public String createPathForLocalUse(CdrFile cdrFile) {
 
         StringBuilder sb = new StringBuilder();
 
