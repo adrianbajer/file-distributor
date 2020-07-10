@@ -151,4 +151,56 @@ public class ExcelParserImpl implements ExcelParser{
 
         return raksCodeList;
     }
+
+
+//-------------------------------------------------------------------------
+
+    public List<CdrFile> getListOfCdrFiles() {
+        Workbook workbook = null;
+        FileInputStream file = null;
+
+        List<CdrFile> cdrFileList = new ArrayList<>();
+
+        try {
+            file = new FileInputStream(new File(pathName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            // @@@@@@@@@@ XSSFWorkbook for xlsx files, HSSFWorkbook for xls files @@@@@@@@@@@@@@@
+//            workbook = new XSSFWorkbook(file);
+            workbook = new HSSFWorkbook(file);
+
+            Date dateOfCdrFile;
+            SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy");
+            Sheet sourceFiles = workbook.getSheetAt(1);
+
+
+            for(Row row : sourceFiles) {
+                // first condition skips 2 first rows, which contains headings
+                if (row.getRowNum() > 1) {
+                    if (row.getCell(0) != null) {
+//                        dateOfCdrFile = row.getCell(2).getDateCellValue();
+//                        String formattedDateOfCdrFile = formatter.format(dateOfCdrFile);
+
+//                        cdrFileList.add(new CdrFile(row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(),
+//                                row.getCell(3).toString(), "", "", row.getCell(5).toString()));
+
+                        cdrFileList.add(new CdrFile(row.getCell(0).toString()));
+                    }
+                }
+            }
+
+            file.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return cdrFileList;
+    }
+
+
 }

@@ -46,8 +46,14 @@ public class RaksCodeController {
             return "rakscode/messagenoproject";
         }
 
-//        raksCodeList.remove(raksCode);
-//        raksCodeList.add(raksCode);
+//        for (RaksCode element : raksCodeList) {
+//            if (element.getRaksCode().equals(raksCode.getRaksCode())) {
+//
+//            }
+//        }
+//        System.out.println(raksCodeList.indexOf(raksCode.getRaksCode()));
+
+        raksCodeList.add(0, raksCode);
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
@@ -64,6 +70,8 @@ public class RaksCodeController {
         if (cdrFileSet.size() == 0) {
             return "rakscode/messagenoproject";
         }
+
+        raksCodeList.add(0, raksCode);
 
         model.addAttribute("cdrFiles", cdrFileSet);
         model.addAttribute("raksCode", new RaksCode());
@@ -82,6 +90,8 @@ public class RaksCodeController {
             return "rakscode/messagenoproject";
         }
 
+        raksCodeList.add(0, raksCode);
+
         //     @@@@@@@@@@@@@@@   do testowania    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
         PathCreatorImpl pathCreator = new PathCreatorImpl();
@@ -97,7 +107,9 @@ public class RaksCodeController {
 //            we are in main dir now
 
 //            for network use
-            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPathForLocalUse(cdrFile));
+            try {
+                listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(pathCreator.createPathForLocalUse(cdrFile));
+
 
 //            for local use
 //            listOfPathsToFilesAndDirectoriesInMainDir = fileDownloader.getListOfPathsToFilesAndDirs(cdrFile.getPath());
@@ -133,6 +145,10 @@ public class RaksCodeController {
             listWithPathsToLegendsMetroAndIndexes = fileDownloader.findPathsMatchingRegex(listOfPathsToDirsInLatestVDir, "legend|metro|indeks");
             for(String pathToDir : listWithPathsToLegendsMetroAndIndexes) {
                 fileDownloader.copyDirFromLatestVDir(pathToDir);
+            }
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
 

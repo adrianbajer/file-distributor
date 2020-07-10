@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>File Distributor - RAKS form</title>
+</head>
+<body bgcolor="#6495ed">
+<hr>
+<div class="container">
+    <h2>cdr file form</h2>
+    <div>
+        <form action="#" th:action="@{/cdrform}" th:object="${cdrFile}" method="get">
+
+            <p style="font-weight: bold;">Select cdr file:</p>
+            <select style="margin-top:-10px;" th:field="*{name}">
+                <option th:each="item : ${cdrFileList}"
+                        th:value="${item.name}"
+                        th:text="${item.name}"></option>
+            </select>
+            <br>
+            <br>
+
+
+<!--            <p style="margin-top:-25px; font-weight: bold;">Select type of job.</p>-->
+<!--            <input style="margin-top:-10px;" type="radio" name="job" th:field="*{jobType}" value="PUBLICATION"> publication<br>-->
+<!--            <input type="radio" name="job" th:field="*{jobType}" value="ACTUALISATION"> actualisation<br><br>-->
+<!--            <p style="font-weight: bold;">Now you can either download or view files for your project</p>-->
+
+            <button style="margin-top:-25px; background-color: yellow" type="submit" name="action">View component files</button>
+
+<!--            <hr>-->
+<!--            <p style="font-weight: bold;">Select your name: &ensp;-->
+<!--                <br><br>-->
+<!--                <select style="margin-top:-10px;" th:field="*{userName}">-->
+<!--                    <option value = "ADRIAN">Adrian</option>-->
+<!--                    <option value = "BOLEK">Bolek</option>-->
+<!--                    <option value = "LOLEK">Lolek</option>-->
+<!--                </select>-->
+<!--            </p>-->
+<!--            <button style="margin-top:-25px; background-color: lightgreen" type="submit" name="action" value="publication">no logic yet - Copy files for publication</button>-->
+<!--            <button style="margin-top:-25px; background-color: orange" type="submit" name="action" value="updating">Copy files for testing</button>-->
+        </form>
+<!--        <hr>-->
+
+<!--        <div id="title">-->
+<!--            <h3>Your project consists of following files:</h3>-->
+<!--        </div>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th style="text-align: left;">Name</th>-->
+<!--                <th style="text-align: left; padding:0 15px 0 15px;">Version</th>-->
+<!--                <th style="text-align: left; padding:0 15px 0 15px;">Date</th>-->
+<!--                <th style="text-align: left; padding:0 15px 0 15px;">Place</th>-->
+<!--                &lt;!&ndash;                <th style="text-align: left; padding:0 15px 0 15px;">Region</th>&ndash;&gt;-->
+<!--                &lt;!&ndash;                <th style="text-align: left; padding:0 15px 0 15px;">Type</th>&ndash;&gt;-->
+<!--                <th style="text-align: left; padding:0 15px 0 15px;">Path</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr data-th-each="cdrFile : ${cdrFiles}">-->
+<!--                <td th:text="${cdrFile.name}"></td>-->
+<!--                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.version}"></td>-->
+<!--                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.date}"></td>-->
+<!--                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.place}"></td>-->
+<!--                &lt;!&ndash;                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.region}"></td>&ndash;&gt;-->
+<!--                &lt;!&ndash;                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.type}"></td>&ndash;&gt;-->
+<!--                <td style="padding:0 15px 0 15px;" th:text="${cdrFile.path}"></td>-->
+<!--                <td>-->
+<!--                    &lt;!&ndash;                    <form method="post" th:action="@{/givefile}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="hidden" th:name="cdrFile_name" th:value="${cdrFile.name}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="hidden" th:name="cdrFile_place" th:value="${cdrFile.place}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="hidden" th:name="cdrFile_region" th:value="${cdrFile.region}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                        <input type="hidden" th:name="cdrFile_type" th:value="${cdrFile.type}">&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    </form>&ndash;&gt;-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--        </div>-->
+<!--        <br>-->
+<!--        <hr>-->
+
+<!--        <br>-->
+<!--        <button style="background-color: gray" onclick="window.location.href = '/shutdown';">Shutdown the application</button>-->
+    </div>
+</div>
+
+</body>
+</html>
