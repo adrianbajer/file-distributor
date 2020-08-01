@@ -19,7 +19,4 @@ public class CdrFile {
     public CdrFile() {
     }
 
-    public CdrFile(String name) {
-        this.name = name;
-    }
 }

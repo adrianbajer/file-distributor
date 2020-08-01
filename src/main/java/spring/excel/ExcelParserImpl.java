@@ -174,22 +174,46 @@ public class ExcelParserImpl implements ExcelParser{
             workbook = new HSSFWorkbook(file);
 
             Date dateOfCdrFile;
+            String stringDateOfCdrFile;
             SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy");
             Sheet sourceFiles = workbook.getSheetAt(1);
 
+            System.out.println(sourceFiles.getRow(3).getCell(0).getStringCellValue());
+            System.out.println(sourceFiles.getRow(3).getCell(1).getStringCellValue());
+            System.out.println(sourceFiles.getRow(3).getCell(2).getDateCellValue());
+            System.out.println(sourceFiles.getRow(3).getCell(3).getStringCellValue());
+
 
             for(Row row : sourceFiles) {
-                // first condition skips 2 first rows, which contains headings
-                if (row.getRowNum() > 1) {
-                    if (row.getCell(0) != null) {
-//                        dateOfCdrFile = row.getCell(2).getDateCellValue();
+                        // first condition skips 2 first rows, which contains headings
+                        if (row.getRowNum() > 1) {
+                            if (row.getCell(0) != null) {
+//                                CdrFile cdrFile = new CdrFile();
+//                                cdrFile.setName(row.getCell(0).toString());
+//                                cdrFile.setVersion(row.getCell(1).toString());
+
+                                dateOfCdrFile = row.getCell(2).getDateCellValue();
+                                String formattedDateOfCdrFile = formatter.format(dateOfCdrFile);
+
+//                                cdrFile.setVersion(row.getCell(1).toString());
+//
+//                                System.out.println(formattedDateOfCdrFile);
+//                                System.out.println(cdrFile);
+//                                cdrFileList.add(cdrFile);
+
+
+
+//                        stringDateOfCdrFile = row.getCell(2).getCellType().toString();
+//                        System.out.println(stringDateOfCdrFile);
 //                        String formattedDateOfCdrFile = formatter.format(dateOfCdrFile);
 
-//                        cdrFileList.add(new CdrFile(row.getCell(0).toString(), row.getCell(1).toString(), row.getCell(2).toString(),
-//                                row.getCell(3).toString(), "", "", row.getCell(5).toString()));
+                        cdrFileList.add(new CdrFile(row.getCell(0).toString(), row.getCell(1).toString(), formattedDateOfCdrFile,
+                                row.getCell(3).toString(), "", "", row.getCell(5).toString()));
 
-                        cdrFileList.add(new CdrFile(row.getCell(0).toString()));
-                    }
+//                                cdrFileList.add(new CdrFile(row.getCell(0).toString(), row.getCell(1).toString(), null));
+
+//                        cdrFileList.add(new CdrFile(row.getCell(0).toString()));
+                            }
                 }
             }
 
@@ -197,6 +221,8 @@ public class ExcelParserImpl implements ExcelParser{
 
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
         }
 
         return cdrFileList;

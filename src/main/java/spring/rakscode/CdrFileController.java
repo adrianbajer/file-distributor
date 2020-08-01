@@ -7,7 +7,9 @@ import spring.cdrfiles.CdrFile;
 import spring.cdrfiles.FileDownloaderImpl;
 import spring.excel.ExcelParserImpl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class CdrFileController {
@@ -26,6 +28,25 @@ public class CdrFileController {
     public String showFormWhenStarting(Model model) {
 
         model.addAttribute("cdrFile", new CdrFile());
+        model.addAttribute("cdrFileList", cdrFileList);
+
+        return "rakscode/cdrform";
+    }
+
+    @RequestMapping(value ="/cdrform", params="action=showdetails")
+    public String showDetailsOfSelectedFile(CdrFile cdrFile, Model model) {
+
+        Set<CdrFile> cdrFileWithDetailsSet = new HashSet<>();
+
+        for (CdrFile cdrFileFromList : cdrFileList) {
+            if (cdrFileFromList.getName().equals(cdrFile.getName())){
+                cdrFileWithDetailsSet.add(cdrFileFromList);
+                break;
+            }
+        }
+
+        model.addAttribute("cdrFile", new CdrFile());
+        model.addAttribute("cdrFileWithDetailsSet", cdrFileWithDetailsSet);
         model.addAttribute("cdrFileList", cdrFileList);
 
         return "rakscode/cdrform";
