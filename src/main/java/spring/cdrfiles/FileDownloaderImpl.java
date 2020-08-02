@@ -55,6 +55,21 @@ public class FileDownloaderImpl implements FileDownloader {
     public void copyFileFromLatestVDir(String pathToFile) {
         Path srcFile = Paths.get(pathToFile);
 
+        // line below extracts file name in order to create destination path
+        String fileName = pathToFile.substring(pathToFile.lastIndexOf("\\"));
+        Path dstFile = Paths.get(resultCopiesDirPath + "\\" + fileName);
+
+        try {
+            Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void copyFileFromLatestVDirToProjectsDir(String pathToFile) {
+        Path srcFile = Paths.get(pathToFile);
+
         //        following code creates separate dirs for files from different projects, in case of v dir we have to
         //        repeat cutting off last dir name twice
         String toCreateDstDirName1 = pathToFile.substring(0, pathToFile.lastIndexOf("\\"));

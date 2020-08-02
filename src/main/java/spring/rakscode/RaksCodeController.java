@@ -138,7 +138,7 @@ public class RaksCodeController {
 //            we are in latestVDir now and copy all files
 
             for(String pathToFile : listOfPathsToFilesInLatestVDir) {
-                fileDownloader.copyFileFromLatestVDir(pathToFile);
+                fileDownloader.copyFileFromLatestVDirToProjectsDir(pathToFile);
             }
 
 //            we are in latestVDir now and copy dirs matching regex
